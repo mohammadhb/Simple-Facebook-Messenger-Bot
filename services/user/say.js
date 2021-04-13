@@ -1,8 +1,8 @@
-function sayName(){
+function sayName(user,previous,next){
 
 }
 
-function sayDaysUntilBirthday(){
+function sayDaysUntilBirthday(user,previous,next){
 
 }
 

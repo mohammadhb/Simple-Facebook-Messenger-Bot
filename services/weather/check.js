@@ -2,15 +2,19 @@ function check(){
 
 }
 
-function askCity(){
+function askCity(user,previous,next){
 
 }
 
-function queryCities(city){
+function queryCities(user,previous,next,{city}){
 
 }
 
-function getWeather(cityId){
+function selectCity(user,previous,next,{city}){
+
+}
+
+function getWeather(user,previous,next,{cityId}){
 
 }
 
@@ -18,32 +22,32 @@ module.exports = [
     {
         title:'How\'s the Weather?',
         route:'/weather/askCity',
-        nextRoute:'/weather/queryCities',
-        previousRoute:'',
+        next:'/weather/queryCities',
+        previous:'',
         service:askCity,
         hidden:false
     },
     {
         title:'',
         route:'/weather/queryCities',
-        nextRoute:'/weather/queryCities',
-        previousRoute:'',
+        next:'/weather/queryCities',
+        previous:'',
         service:queryCities,
         hidden:true
     },
     {
         title:'',
         route:'/weather/queryCities',
-        nextRoute:'/weather/selectCity',
-        previousRoute:'',
+        next:'/weather/selectCity',
+        previous:'',
         service:selectCity,
         hidden:true
     },
     {
         title:'',
         route:'/weather/selectCity',
-        nextRoute:'/weather/getWeather',
-        previousRoute:'',
+        next:'/weather/getWeather',
+        previous:'',
         service:getWeather,
         hidden:true
     }
