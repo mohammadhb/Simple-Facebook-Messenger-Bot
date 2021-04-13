@@ -1,4 +1,4 @@
 module.exports = [
-    ...require('./register'),
-    ...require('./say')
+  ...require("./register"),
+  ...require("./say")
 ];

@@ -9,25 +9,25 @@ const config = envConfigs[env];
 const db = {};
 
 let sequelize = new Sequelize(config.database, config.username, config.password, {
-	dialect: config.dialect,
+  dialect: config.dialect,
 });
 
-const modelPath = path.join(__dirname, 'models');
+const modelPath = path.join(__dirname, "models");
 fs.readdirSync(modelPath)
-	.filter((file) => {
-		return file.indexOf(".") !== 0 && file !== basename && file.slice(-3) === ".js";
-	})
-	.forEach((file) => {
-		console.log("__dirname", require(path.join(modelPath, file)));
-		const model = require(path.join(modelPath, file))(sequelize, Sequelize.DataTypes);
-		console.log(modelPath,file)
-		db[model.name] = model;
-	});
+  .filter((file) => {
+    return file.indexOf(".") !== 0 && file !== basename && file.slice(-3) === ".js";
+  })
+  .forEach((file) => {
+    console.log("__dirname", require(path.join(modelPath, file)));
+    const model = require(path.join(modelPath, file))(sequelize, Sequelize.DataTypes);
+    console.log(modelPath,file);
+    db[model.name] = model;
+  });
 
 Object.keys(db).forEach((modelName) => {
-	if (db[modelName].associate) {
-		db[modelName].associate(db);
-	}
+  if (db[modelName].associate) {
+    db[modelName].associate(db);
+  }
 });
 
 db.sequelize = sequelize;
