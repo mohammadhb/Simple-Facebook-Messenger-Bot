@@ -55,7 +55,7 @@ const schema = new Schema({
 
 });
 
-schema.methods.getUserByObjectId = function(id){
+schema.methods.getByObjectId = function(id){
 
 	return this.model(modelName).findOne({
 		_id:id
@@ -63,7 +63,7 @@ schema.methods.getUserByObjectId = function(id){
 
 }
 
-schema.methods.getUserById = function(id){
+schema.methods.getById = function(id){
 
 	return this.model(modelName).findOne({
 		id

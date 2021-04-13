@@ -1,12 +1,12 @@
 class Model {
 
-    constructor(statusClient,dataClient,messageClient){
-
-        this.status = null;
-        this.user = null;
+    constructor(statusClient,dataClient){
 
         this.statusClient = statusClient;
         this.dataClient = dataClient;
+
+        this.status = null;
+        this.user = null;
 
         this.expireTime = 60*60*2;//2h
 
@@ -26,27 +26,21 @@ class Model {
         this.user.birthday = value;
     }
 
-    get user(user){
+    async setId(value){
 
-        const userString = JSON.stringify(user);
-        return this.dataClient.setAsync(user.id,userString,'EX',this.expireTime);
-
+        if(value){
+            this.user = await this.dataClient.getAsync(value);
+            this.status = await this.statusClient.getAsync(value);
+        }
+        
     }
 
-    set status(user){
-
-        const userString = JSON.stringify(user);
-        return this.dataClient.setAsync(user.id,userString,'EX',this.expireTime);
-        // await this.emailVerificationClient.delAsync(key);
-
-    }
-
-    get status(){
-        return this.messages;
-    }
-    set status(value){
-        this.status = value;
-    }
+    // get status(){
+    //     return this.messages;
+    // }
+    // set status(value){
+    //     this.status = value;
+    // }
 
 }
 

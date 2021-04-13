@@ -19,8 +19,8 @@ class Redis {
 
         try{
             
-            const status = await this.createClient(0),data = await this.createClient(1),message = await this.createClient(2);
-            this.addModel('user',new models.user(status,data,message));
+            const status = await this.createClient(0),data = await this.createClient(1);
+            this._models['user'] = new models.user(status,data);
 
         }catch(error){
 
@@ -72,9 +72,6 @@ class Redis {
 
 }
 
-const _redis = new Redis();
-_redis.init();
-
 module.exports = {
-    Redis:_redis
+    Redis
 };

@@ -1,15 +1,17 @@
 const {Redis} = require('./redis/index.js');
 let redisController = null;
 
-//Router Controller
-let start = (config)=>{
+let redis = async ()=>{
 
-    redisController = Redis;
+    if(redisController) {
+        return redisController;
+    }
+    redisController = new Redis();
+    await redisController.init();
+    return redisController;
 
 }
 
 module.exports = {
-    start,
-    redis:redisController,
-    
+    Cacher:redis,
 }

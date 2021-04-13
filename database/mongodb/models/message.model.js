@@ -4,7 +4,7 @@ const Schema = mongoose.Schema
 const Types = Schema.Types
 
 const modelName = 'Message'
-const collectionName = 'messages';
+const collection = 'messages';
 
 const schema = new Schema({
 
@@ -14,10 +14,6 @@ const schema = new Schema({
 	},
 	messageId: {
 		type:String,
-		default:null
-	},
-	timestamp:{
-		type:Date,
 		default:null
 	},
 	recipientId: {
@@ -106,6 +102,27 @@ schema.methods.getAll = function(){
 	const model = this.model(modelName);
 
 	let query = {
+	};
+
+	const fields = {
+		__v:0,
+		_data_lifecycle:0,
+	};
+
+	return model
+	.find(query)
+	.populate('User','-__v -_data_lifecycle')
+	.select(fields)
+	.exec();
+
+};
+
+schema.methods.getById = function(id){
+
+	const model = this.model(modelName);
+
+	let query = {
+		_id:id
 	};
 
 	const fields = {
