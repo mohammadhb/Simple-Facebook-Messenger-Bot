@@ -1,34 +1,47 @@
 const 
-    user = require('./user'),
-    weather = require('./weather');
+  user = require("./user"),
+  weather = require("./weather");
+
+const cacheUtil = require("../utils/cache");
 
 function router(route){
 
-    const actions = [
-        ...user,
-        ...weather
-    ]
+  const actions = [
+    ...user,
+    ...weather
+  ];
 
-    return actions.find((action)=>action.route==route);
+  return actions.find((action)=>action.route==route);
 
 }
 
-function mainService(user){
+async function mainService(user,message){
 
-    //Register before any Actions
-    if(!user.firstname || !user.birthday){
+  const userCache = await cacheUtil.getUserFromCache(user.id);
 
-        const action = router('/user/register');
-        action.service(user,action.previous,action.next)
-        //Cache route
-        //send to router
+  console.log(user,message,userCache.status);
 
-    }
+  if(userCache.status){
 
-    console.log(user)
+    const action = router(userCache.status);
+    return action.service(user,message,action.routes);
 
-    //Send to Main Menu
-    //send main menu
+  }
+
+  //Register before any Actions
+  if(!user.firstname || !user.birthday){
+
+        
+    const action = router("/user/register");
+    console.log(action);
+    return action.service(user,message,action.routes);
+
+  }
+
+  console.log(user);
+
+  //Send to Main Menu
+  //send main menu
 
 }
 
