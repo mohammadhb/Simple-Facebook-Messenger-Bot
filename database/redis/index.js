@@ -24,7 +24,7 @@ class Redis {
 
         }catch(error){
 
-            console.error("this.addClient('sessions',await this.createClient(0));");
+            console.error("An Error has been occured");
             console.error(error);
 
         }

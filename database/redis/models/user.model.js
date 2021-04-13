@@ -4,11 +4,9 @@ class Model {
 
         this.status = null;
         this.user = null;
-        this.messages = null;
 
         this.statusClient = statusClient;
         this.dataClient = dataClient;
-        this.messageClient = messageClient;
 
         this.expireTime = 60*60*2;//2h
 
@@ -28,13 +26,6 @@ class Model {
         this.user.birthday = value;
     }
 
-    get messages(){
-        return this.messages;
-    }
-    set messages(value){
-        this.user.birthday = value;
-    }
-
     get user(user){
 
         const userString = JSON.stringify(user);
@@ -46,6 +37,7 @@ class Model {
 
         const userString = JSON.stringify(user);
         return this.dataClient.setAsync(user.id,userString,'EX',this.expireTime);
+        // await this.emailVerificationClient.delAsync(key);
 
     }
 
@@ -55,10 +47,6 @@ class Model {
     set status(value){
         this.status = value;
     }
-
-    
-
-    
 
 }
 

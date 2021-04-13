@@ -55,6 +55,37 @@ const schema = new Schema({
 
 });
 
+schema.methods.getUserByObjectId = function(id){
+
+	return this.model(modelName).findOne({
+		_id:id
+	});
+
+}
+
+schema.methods.getUserById = function(id){
+
+	return this.model(modelName).findOne({
+		id
+	});
+
+}
+
+schema.methods.matchUserBySearch = function(query){
+
+	const regex = new RegExp(query,'ig');
+
+	return this.model(modelName).find({
+		
+		$or:[
+			{
+				firstname:regex
+			}
+		]
+
+	});
+
+}
 
 const model = mongoose.model(modelName, schema, collection);
 

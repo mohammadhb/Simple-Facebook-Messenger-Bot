@@ -65,7 +65,61 @@ const schema = new Schema({
 
 });
 
+schema.methods.getAllPageinated = function(filters,page,pageLimit){
 
+	const model = this.model(modelName);
+
+	let query = {
+		// status:'active'
+	},skip=(page-1)*pageLimit,limit=pageLimit;
+
+	let queryORs = [];
+
+	if(filters.type){
+
+		filters.type.forEach(type => {
+
+			queryORs.push({
+				type
+			});
+
+		});
+
+	}
+
+	const fields = {
+		__v:0,
+	};
+
+	return model
+	.find(query)
+	.populate('Message','-__v -_data_lifecycle')
+	.skip(skip)
+	.limit(limit)
+	.select(fields)
+	.exec();
+
+};
+
+schema.methods.getAll = function(){
+
+	const model = this.model(modelName);
+
+	let query = {
+	};
+
+	const fields = {
+		__v:0,
+		_data_lifecycle:0,
+	};
+
+	return model
+	.find(query)
+	.populate('User','-__v -_data_lifecycle')
+	.select(fields)
+	.exec();
+
+};
 
 const model = mongoose.model(modelName, schema, collection)
 
