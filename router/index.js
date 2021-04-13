@@ -16,7 +16,7 @@ function start(port) {
     console.log(`Application is trying to Listen on ${port}`);
     
     // Sets server port and logs message on success
-    app.listen(port, (error) => {
+    router.listen(port, (error) => {
 
         if(error){
             throw new Error();
@@ -28,4 +28,4 @@ function start(port) {
 
 }
 
-module.exports = router;
+module.exports = {start};

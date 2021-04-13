@@ -8,7 +8,7 @@ router.post("/", (req, res) => {
 
 		body.entry.forEach((entry) => {
 			let webhook_event = entry.messaging[0];
-			console.log(webhook_event);
+			console.log(webhook_event.message.attachments);
 		});
 		res.status(200).send("EVENT_RECEIVED");
 
