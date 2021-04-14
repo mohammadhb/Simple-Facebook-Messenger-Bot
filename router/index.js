@@ -6,8 +6,9 @@ const
 router.use("/conversations",require("./conversation"));
 router.use("/messages",require("./message"));
 
-router.use(require("helmet"));
+router.use(require("helmet")());
 
+/* istanbul ignore next */
 function start(port) {
 
   if(!port){

@@ -48,8 +48,6 @@ function sendMessage(recipient, message, quickReplies) {
       params: { access_token },
     };
 
-  console.log(data);
-
   return client.post(path, data, options);
 }
 

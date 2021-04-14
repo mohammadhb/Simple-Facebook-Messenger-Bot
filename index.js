@@ -9,7 +9,6 @@ try{
 
 }catch(error){
 
-  console.log(error);
   //Error on Listening
   process.exit(0);
     

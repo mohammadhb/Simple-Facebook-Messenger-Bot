@@ -1,53 +1,40 @@
 class Model {
+  constructor(client) {
+    this.cache = {};
 
-    constructor(client){
+    this.client = client;
+    this.expireTime = 60 * 60 * 2; //2h
+  }
 
-        this.cache = {};
+  async readFromCache(key) {
+    // const data = JSON.stringify(value);
+    // return this.client.getAsync(key,data,'EX',this.expireTime);
 
-        this.client = client;
-        this.expireTime = 60*60*2;//2h
+    return new Promise(
+      ((resolve) => {
+        let result;
 
-    }
+        if (!this.cache[key]) {
+          try {
+            result = this.client.get(key);
+          } catch (error) {
+            throw new Error("Couldn't read from Cache");
+          }
+        } else {
+          result = this.cache[key];
+        }
 
-    async readFromCache(key){
+        resolve(result);
+      },
+      () => {})
+    );
+  }
 
-        // const data = JSON.stringify(value);
-        // return this.client.getAsync(key,data,'EX',this.expireTime);
-
-        return new Promise((
-            (resolve)=>{
-
-                let result;
-
-                if(!this.cache[key]){
-                    try{
-                        result = await this.client.getAsync(key,data,'EX',this.expireTime);
-                    }catch(error){
-                        throw new Error("Couldn't read from Cache");
-                    }
-                } else {
-                    result = this.cache[key];
-                }
-
-                resolve(result)
-
-            },
-            (reject)=>{
-
-            }
-        ))
-
-    }
-
-    updateCache(key,value){
-
-        this.data[key] = value; 
-        const data = JSON.stringify(value);
-        return this.client.setAsync(key,data,'EX',this.expireTime);
-
-    }
-
-
+  updateCache(key, value) {
+    this.data[key] = value;
+    const data = JSON.stringify(value);
+    return this.client.setAsync(key, data, "EX", this.expireTime);
+  }
 }
 
 module.exports = Model;

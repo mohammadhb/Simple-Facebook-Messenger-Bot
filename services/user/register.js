@@ -5,15 +5,9 @@ const cacheUtil = require("../../utils/cache");
 async function register(user, message, routes) {
   try {
     const userCache = await cacheUtil.getUserFromCache(user.id);
-    // if(message){
-    //     new User().updateById(user.id,{firstname:message});
-    //
-    // }else {
-    //     //On error
 
-    // }
-    console.log(sendMessageWithSeenAndTyping);
-    await sendMessageWithSeenAndTyping(user.id, "Ok, What's your name?");
+    await sendMessageWithSeenAndTyping(user.id, "Hi, this is your first time with me!");
+    await sendMessageWithSeenAndTyping(user.id, "What's your name?");
     userCache.status = routes.next;
   } catch (error) {
     // console.error(error);
@@ -23,7 +17,6 @@ async function register(user, message, routes) {
 async function getFirstName(user, message, routes) {
   try {
     const userCache = await cacheUtil.getUserFromCache(user.id);
-    console.log("message ->", message);
     if (message) {
       await new User().updateById(user.id, { firstname: message });
       await sendMessageWithSeenAndTyping(user.id, `${message}, What's your birthday date?`);
@@ -69,9 +62,7 @@ async function getBirthday(user, message, routes) {
 }
 
 function calculateDayDifferenceFrom(date) {
-  console.log(date);
   const result = Math.ceil((new Date(date) - new Date()) / 1000 / 3600 / 24) % 365;
-  console.log(result);
   if (result < 0) return result + 365;
   return result;
 }
@@ -109,13 +100,23 @@ async function getAnswerForDaysTillBirthday(user, message, routes) {
     if (message) {
       const reply = possibleReplies.find((reply) => reply.key == message.toLowerCase());
       if (reply) {
-        await sendMessageWithSeenAndTyping(
-          user.id,
-          `There are ${calculateDayDifferenceFrom(
-            userCache.user.birthday
-          )} days left until your next birthday.`
-        );
-        userCache.status = routes.next;
+        
+        if(reply.value){
+          await sendMessageWithSeenAndTyping(
+            user.id,
+            `There are ${calculateDayDifferenceFrom(
+              userCache.user.birthday
+            )} days left until your next birthday.`
+          );
+          userCache.status = routes.next;
+        }else {
+          await sendMessageWithSeenAndTyping(
+            user.id,
+            "👋 Goodbye"
+          );
+          userCache.status = routes.next;
+        }
+
       } else {
         await sendMessageWithSeenAndTyping(
           user.id,
@@ -132,20 +133,6 @@ async function getAnswerForDaysTillBirthday(user, message, routes) {
           ]
         );
       }
-    } else {
-      //On error
-    }
-  } catch (error) {
-    console.error(error);
-  }
-}
-
-async function sayGoodbye(user, message, routes) {
-  try {
-    const userCache = await cacheUtil.getUserFromCache(user.id);
-    if (message) {
-      await sendMessageWithSeenAndTyping(user.id, "Goodbye");
-      userCache.status = routes.next;
     } else {
       //On error
     }
@@ -193,16 +180,6 @@ module.exports = [
       previous: "user/register/getBirthday",
     },
     service: getAnswerForDaysTillBirthday,
-    hidden: true,
-  },
-  {
-    title: "Say Goodbye",
-    route: "/user/register/sayGoodbye",
-    routes: {
-      next: "",
-      previous: "user/register/getAnswerForDaysTillBirthday",
-    },
-    service: sayGoodbye,
     hidden: true,
   },
 ];
