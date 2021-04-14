@@ -1,14 +1,16 @@
-'use strict';
+"use strict";
 
-const router = require('./router');
+require("dotenv").config();
+const router = require("./router");
 
 try{
 
-    router.start();
+  router.start(3000);
 
 }catch(error){
 
-    //Error on Listening
-    process.exit(0);
+  console.log(error);
+  //Error on Listening
+  process.exit(0);
     
 }
