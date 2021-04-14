@@ -1,0 +1,36 @@
+version: "3.8"
+
+services:
+  messenger:
+    image: messenger
+    container_name: messenger
+    restart: unless-stopped
+    build:
+        context: .
+        dockerfile: Dockerfile
+    ports:
+      - 3000:3000
+    depends_on:
+      - mongodb
+    networks:
+      - network
+
+  mongodb:
+    image: mongo:3.4.7
+    container_name: db
+    restart: unless-stopped
+    env_file: .env
+    ports:
+      - 27017:27017
+    volumes:
+      - db-data:/data/db
+    networks:
+      - network
+
+networks:
+  network:
+    driver: bridge
+
+
+volumes:
+  db-data:
