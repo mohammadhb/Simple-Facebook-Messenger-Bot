@@ -19,6 +19,7 @@ class Redis {
   async closeConnection(){
 
     for (const client of this._clients){
+      await client.sendCommand("FLUSHALL");
       await client.end(true);
     }
 
@@ -55,13 +56,12 @@ class Redis {
 
   async createClient(dbNum){
 
-    return new Promise((resolve,reject)=>{
+    return new Promise((resolve)=>{
 
       let client = redis.createClient();
 
       client.select(dbNum,()=>{
 
-        console.log(`Redis started DBNUM=${dbNum}`);
         resolve(client);
 
       });

@@ -1,24 +1,28 @@
-function sayName(user,previous,next){
+function sayName(){
 
 }
 
-function sayDaysUntilBirthday(user,previous,next){
+function sayDaysUntilBirthday(){
 
 }
 
 module.exports = [
   {
     title:"Say My Name!",
-    route:"/user/name",
-    fallbackRoute:"",
-    service:sayName,
-    hidden:false
+    route:"/user/say/name",
+    routes: {
+      next: "",
+    },
+    service: sayName,
+    hidden: false,
   },
   {
-    name:"Say Days Until My Birthday",
-    route:"/user/daysUntilBirthday",
-    fallbackRoute:"",
-    service:sayDaysUntilBirthday,
-    hidden:false
+    title:"Say Days Until My Birthday",
+    route:"/user/say/daysUntilBirthday",
+    routes: {
+      next: "",
+    },
+    service: sayDaysUntilBirthday,
+    hidden: false,
   }
 ];

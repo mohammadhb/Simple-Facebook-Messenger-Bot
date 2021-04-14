@@ -15,33 +15,55 @@ function router(route){
 
 }
 
-async function mainService(user,message){
+// async function showMainmenu(userCache,message){
+
+//   // console.log("user",user)
+//   const actions = [
+//     ...user,
+//     ...weather
+//   ];
+
+//   console.log(actions
+//     .filter(action=>!action.hidden)
+//     .map(action=>{
+//       return {
+//         key:action.title,
+//         value:action.route
+//       };
+//     }));
+
+//   await sendMessageWithSeenAndTyping(
+//     userCache.id,
+//     "Choose what do you want to do now?",
+//     actions
+//       .filter(action=>!action.hidden)
+//       .map(action=>{
+//         return {
+//           key:action.title,
+//           value:action.route
+//         };
+//       })
+//   );
+
+// }
+
+async function mainService(userData,user,message){
 
   const userCache = await cacheUtil.getUserFromCache(user.id);
-
-  console.log(user,message,userCache.status);
 
   if(userCache.status){
 
     const action = router(userCache.status);
     return action.service(user,message,action.routes);
 
-  }
+  }else{
 
-  //Register before any Actions
-  if(!user.firstname || !user.birthday){
-
-        
     const action = router("/user/register");
-    console.log(action);
     return action.service(user,message,action.routes);
 
   }
-
-  console.log(user);
-
-  //Send to Main Menu
-  //send main menu
+  
+  //showMainmenu(user,message);
 
 }
 

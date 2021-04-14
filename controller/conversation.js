@@ -14,8 +14,6 @@ async function event(request,response){
     for (let entry of body.entry){
 
       const event = entry.messaging[0];
-      console.log(event);
-            
 
       //Save any incoming messages
       new Message({
@@ -26,37 +24,33 @@ async function event(request,response){
         timestamp:event.timestamp
       }).save();
 
-      console.log(event);
-
       let userCache = await cacheUtil.getUserFromCache(event.sender.id),
         user;
 
-                
+      if(!userCache.user) {
 
-      if(userCache.user){
-        // console.log(userCache.user);
-        // console.log(userCache.status);
-        user = userCache;
-      }else {
         user = await new User().getById(event.sender.id);
         if(!user){
           user = await new User({
             id:event.sender.id
           }).save();
         }
-        userCache.user = user;
+
+        userCache.user = {
+          firstname:user.firstname,
+          birthdate:user.birthdate
+        };
+
       }
 
       //Sending User to Main Service
             
-      await mainService(user,event.message.text);
+      await mainService(user,userCache,event.message.text);
 
       response.status(200).send("EVENT_RECEIVED");
 
     }
-
-		
-
+    
   } else {
 
     response.sendStatus(404);

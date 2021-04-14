@@ -6,7 +6,7 @@ class Model {
     this.dataClient = dataClient;
 
     this._status = null;
-    this.user = {};
+    this._user = null;
 
     this.expireTime = 60*60*2;//2h
 
@@ -19,8 +19,6 @@ class Model {
         
     if(value){
 
-      console.log("setting user",this.user);
-
       if(this.user){
         this.user.firstname = value;
       }else {
@@ -28,13 +26,7 @@ class Model {
           firstname:value
         };
       }
-
-      console.log({
-        id:this.id,
-        firstname:this.user.firstname,
-        ...this.user
-      });
-
+      
       this.dataClient.set(
         this.id,
         JSON.stringify({
@@ -77,24 +69,35 @@ class Model {
 
   async setId(value){
 
-    console.log("setId",value);
-
     if(value){
 
       this.id=value;
-      this.user = JSON.parse(await this.dataClient.getAsync(value));
+      this._user = JSON.parse(await this.dataClient.getAsync(value));
       this._status = await this.statusClient.getAsync(value);
 
     }
         
   }
 
+  get user(){
+    return this._user;
+  }
+
+  set user(value){
+    this._user=value;
+  }
+
+  async init(id,user){
+
+    this.id=id;
+    this._user=user;
+
+  }
+
   get status(){
     return this._status;
   }
   set status(value){
-
-    console.log("status",this.id,value);
 
     this._status = value;
     this.statusClient.set(

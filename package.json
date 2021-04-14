@@ -3,6 +3,7 @@
   "version": "0.0.1",
   "description": "A Simple Messenger Bot",
   "main": "index.js",
+  "private":true,
   "scripts": {
     "start": "node index.js",
     "doc": "swagger-jsdoc -d ./swagger.config.js -o ./swagger.json './database/mongodb/models/**/*.js' './controller/**/*.js' && redoc-cli serve ./swagger.json",
@@ -19,7 +20,7 @@
     "facebook"
   ],
   "author": "Mohammad Hosein Balkhani",
-  "license": "ISC",
+  "license": "MIT",
   "dependencies": {
     "axios": "^0.21.1",
     "bluebird": "^3.7.2",
