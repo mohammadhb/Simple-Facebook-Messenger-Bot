@@ -15,38 +15,6 @@ function router(route){
 
 }
 
-// async function showMainmenu(userCache,message){
-
-//   // console.log("user",user)
-//   const actions = [
-//     ...user,
-//     ...weather
-//   ];
-
-//   console.log(actions
-//     .filter(action=>!action.hidden)
-//     .map(action=>{
-//       return {
-//         key:action.title,
-//         value:action.route
-//       };
-//     }));
-
-//   await sendMessageWithSeenAndTyping(
-//     userCache.id,
-//     "Choose what do you want to do now?",
-//     actions
-//       .filter(action=>!action.hidden)
-//       .map(action=>{
-//         return {
-//           key:action.title,
-//           value:action.route
-//         };
-//       })
-//   );
-
-// }
-
 async function mainService(userData,user,message){
 
   const userCache = await cacheUtil.getUserFromCache(user.id);
