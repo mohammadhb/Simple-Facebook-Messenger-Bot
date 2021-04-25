@@ -7,7 +7,7 @@ const collection = "users";
 
 const schema = new Schema({
 
-  id: {
+  sender_id: {
     type:String,
     default:null
   },
@@ -19,7 +19,10 @@ const schema = new Schema({
     type:Date,
     default:null
   },
-
+  state: {
+    type:String,
+    default:null
+  },
 
   _data_lifecycle:{
     create:{
@@ -54,26 +57,18 @@ const schema = new Schema({
 
 });
 
-schema.methods.getByObjectId = function(id){
+schema.statics.getBySenderId = function(id){
 
   return this.model(modelName).findOne({
-    _id:id
+    sender_id:id
   });
 
 };
 
-schema.methods.getById = function(id){
-
-  return this.model(modelName).findOne({
-    id
-  });
-
-};
-
-schema.methods.updateById = function(id,update){
+schema.statics.updateById = function(id,update){
 
   return this.model(modelName).updateOne({
-    id
+    _id:id
   },update);
 
 };

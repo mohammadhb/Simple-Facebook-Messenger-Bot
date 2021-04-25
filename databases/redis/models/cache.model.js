@@ -6,10 +6,9 @@ class Model {
     this.expireTime = 60 * 60 * 2; //2h
   }
 
-  async readFromCache(key) {
+  async getCache(key) {
     // const data = JSON.stringify(value);
     // return this.client.getAsync(key,data,'EX',this.expireTime);
-
     return new Promise(
       ((resolve) => {
         let result;

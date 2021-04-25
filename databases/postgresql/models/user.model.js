@@ -16,6 +16,9 @@ module.exports = (sequelize, DataTypes) => {
       birthday: {
         type: DataTypes.DATE,
       },
+      state: {
+        type: DataTypes.STRING,
+      },
     },
     {
       // Other model options go here
