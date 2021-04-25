@@ -1,4 +1,7 @@
-const {Message} = require("../database/mongodb/index").Models;
+const { Message } = require("../repository");
+const {
+  cache: { updateCache },
+} = require("../utils/index");
 
 /**
  * @swagger
@@ -12,7 +15,7 @@ const {Message} = require("../database/mongodb/index").Models;
  *       - application/json
  *     responses:
  *       200:
- *         description: Got all the messages successfully 
+ *         description: Got all the messages successfully
  *         content:
  *           application/json:
  *             schema:
@@ -63,13 +66,20 @@ const {Message} = require("../database/mongodb/index").Models;
  */
 
 //Gets all the messages that sent along the bot
-async function getAllMessages(request,response){
+async function getAllMessages(request, response) {
 
   const messages = await new Message().getAll();
-  return response.status(200).json({
-    data:messages,
-    errors:[]
+  response.status(200).json({
+    data: messages,
+    errors: [],
   });
+
+  try {
+    await updateCache(request.cacheId, messages);
+  } catch (error) {
+    // Error tracing (e.g. Sentry)
+    console.error(error);
+  }
 
 }
 
@@ -87,7 +97,7 @@ async function getAllMessages(request,response){
  *       - application/json
  *     responses:
  *       200:
- *         description: Got the message successfully 
+ *         description: Got the message successfully
  *         content:
  *           application/json:
  *             schema:
@@ -136,14 +146,21 @@ async function getAllMessages(request,response){
  */
 
 //Gets specific Message
-async function getMessage(request,response) {
-    
+async function getMessage(request, response) {
+
   const id = request.params.id;
   const message = await new Message().getById(id);
-  return response.status(200).json({
-    data:message,
-    errors:[]
+  response.status(200).json({
+    data: message,
+    errors: [],
   });
+
+  try {
+    await updateCache(request.cacheId, message);
+  } catch (error) {
+    // Error tracing (e.g. Sentry)
+    console.error(error);
+  }
 
 }
 
@@ -161,7 +178,7 @@ async function getMessage(request,response) {
  *       - application/json
  *     responses:
  *       200:
- *         description: Deleted the message successfully 
+ *         description: Deleted the message successfully
  *         content:
  *           application/json:
  *             schema:
@@ -209,19 +226,25 @@ async function getMessage(request,response) {
  *                         example: No item has found because no message has been sent along
  */
 //Deletes specific Message
-async function deleteMessage(request,response) {
-    
+async function deleteMessage(request, response) {
   const id = request.params.id;
-  const message = await Message.deleteOne({_id:id});
-  return response.status(200).json({
-    data:message,
-    errors:[]
+  const message = await Message.deleteOne({ _id: id });
+  response.status(200).json({
+    data: message,
+    errors: [],
   });
+
+  try {
+    await updateCache(request.cacheId, message);
+  } catch (error) {
+    // Error tracing (e.g. Sentry)
+    console.error(error);
+  }
 
 }
 
 module.exports = {
   getAllMessages,
   getMessage,
-  deleteMessage
+  deleteMessage,
 };

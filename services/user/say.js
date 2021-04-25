@@ -14,7 +14,7 @@ module.exports = [
       next: "",
     },
     service: sayName,
-    hidden: false,
+    hidden: true,
   },
   {
     title:"Say Days Until My Birthday",
@@ -23,6 +23,6 @@ module.exports = [
       next: "",
     },
     service: sayDaysUntilBirthday,
-    hidden: false,
+    hidden: true,
   }
 ];

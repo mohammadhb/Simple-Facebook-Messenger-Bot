@@ -1,16 +1,25 @@
-const {Cacher} = require("../database/index");
+const {redis} = require("../databases");
 
-async function getUserFromCache(id){
+function retriveCache(id){
 
-  const cacher = await Cacher();
-
-  let userCache = cacher.models.user;
-  await userCache.setId(id);
-
-  return userCache;
+  const cacher = redis.manager.getClients().cacher;
+  return cacher.getAsync(id);
 
 }
 
+function updateCache(id,data){
+
+  const cacher = redis.manager.getClients().cacher;
+  return cacher.setAsync(id,JSON.stringify(data));
+
+}
+
+function normalizeCache(data){
+  return JSON.parse(data);
+}
+
 module.exports = {
-  getUserFromCache
+  updateCache,
+  retriveCache,
+  normalizeCache
 };

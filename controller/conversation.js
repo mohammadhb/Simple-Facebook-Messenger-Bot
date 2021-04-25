@@ -1,10 +1,9 @@
+const {Message,User} = require("../repository");
+const mainService = require("../services");
+
 /*
     A Preset Webhook for Bot to be fetch messages
 */
-const {Message,User} = require("../database/mongodb/index").Models;
-const cacheUtil = require("../utils/cache");
-const mainService = require("../services/index");
-
 async function event(request,response){
 
   const body = request.body;
@@ -14,6 +13,7 @@ async function event(request,response){
     for (let entry of body.entry){
 
       const event = entry.messaging[0];
+      response.status(200).send("EVENT_RECEIVED");
 
       //Save any incoming messages
       new Message({
@@ -22,32 +22,17 @@ async function event(request,response){
         messageId:event.message.mid,
         message:event.message.text,
         timestamp:event.timestamp
-      }).save();
+      }).create();
 
-      let userCache = await cacheUtil.getUserFromCache(event.sender.id),
-        user;
-
-      if(!userCache.user) {
-
-        user = await new User().getById(event.sender.id);
-        if(!user){
-          user = await new User({
-            id:event.sender.id
-          }).save();
-        }
-
-        userCache.user = {
-          firstname:user.firstname,
-          birthdate:user.birthdate
-        };
-
+      let user = await new User().getBySenderId(event.sender.id);
+      if(!user){
+        user = await new User({
+          sender_id:event.sender.id
+        }).create();
       }
 
       //Sending User to Main Service
-            
-      await mainService(user,userCache,event.message.text);
-
-      response.status(200).send("EVENT_RECEIVED");
+      await mainService(user,event.message.text,event.message.quick_reply?event.message.quick_reply.payload:null);
 
     }
     
@@ -65,7 +50,7 @@ async function event(request,response){
 function verification(request,response) {
 
   // Your verify token. Should be a random string.
-  let VERIFY_TOKEN = "7CB01D7F515916C707E9F734AD3149CA9A308CD547978F258CBC26CAAF941FF8";
+  const VERIFY_TOKEN = process.env.MESSENGER_BOT_VERIFICATION_TOKEN;
 
   let mode = request.query["hub.mode"];
   let token = request.query["hub.verify_token"];
