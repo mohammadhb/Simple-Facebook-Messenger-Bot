@@ -21,10 +21,10 @@
 ### Technical Features:
 
 Here are addential **Key Technical Features** implemented into this project.
-- [x] Repository Pattern : Implemented a single integrated DAO API that is exposed to serve the different perpose of operating on data.
-- [x] Service Discovery Pattern and Being Service-Based : This Bot is based on a variety of Services that is Implemented in this platform by default ( e.g. Register, Weather). Also developer can add Any Services with minimum effort by just Adding the config and their service-plugin into the Service section.
-- [x] Caching Data : For performance perposes, I used Redis to cache the data it became much more faster with caching methods ( From 100ms to 4ms On my Personal System )
-- [x] Automatic Database Configuration Selection : You can select your own Database you just need to change the **DATABASE** variable in **.env** and you're good to go!
+- [x] **Repository Pattern :** Implemented a single integrated DAO API that is exposed to serve the different perpose of operating on data.
+- [x] **Service Discovery Pattern and Being Service-Based :** This Bot is based on a variety of Services that is Implemented in this platform by default ( e.g. Register, Weather). Also developer can add Any Services with minimum effort by just Adding the config and their service-plugin into the Service section.
+- [x] **Caching Data :** For performance perposes, I used Redis to cache the data it became much more faster with caching methods ( From 100ms to 4ms On my Personal System )
+- [x] **Automatic Database Configuration Selection :** You can select your own Database you just need to change the **DATABASE** variable in **.env** and you're good to go!
 
 ## Directory Layout
 
