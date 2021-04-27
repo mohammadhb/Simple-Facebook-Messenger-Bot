@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "description": "A Simple Messenger Bot",
   "main": "index.js",
-  "private":true,
+  "private": true,
   "scripts": {
     "start": "node index.js",
     "doc": "swagger-jsdoc -d ./swagger.config.js -o ./swagger.json './database/mongodb/models/**/*.js' './controller/**/*.js' && redoc-cli serve ./swagger.json",
@@ -27,8 +27,10 @@
     "body-parser": "^1.19.0",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
-    "helmet": "^4.4.1",
+    "helmet": "^4.5.0",
     "mongoose": "^5.12.3",
+    "pg": "^8.6.0",
+    "pg-hstore": "^2.3.3",
     "redis": "^3.1.0",
     "sequelize": "^6.6.2",
     "supertest": "^6.1.3"

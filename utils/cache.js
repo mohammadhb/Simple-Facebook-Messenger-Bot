@@ -1,16 +1,36 @@
-const {Cacher} = require("../database/index");
+const {
+  temporary: { manager },
+} = require("../databases");
 
-async function getUserFromCache(id){
+function retriveCache(id) {
+  const cacher = manager.getClient("cacher");
+  return cacher.getAsync(id);
+}
 
-  const cacher = await Cacher();
+function updateCache(id, data) {
+  const cacher = manager.getClient("cacher");
+  return cacher.setAsync(id, JSON.stringify(data));
+}
 
-  let userCache = cacher.models.user;
-  await userCache.setId(id);
+function deleteCache(id) {
+  const cacher = manager.getClient("cacher");
+  return cacher.delAsync(id);
+}
 
-  return userCache;
+async function getAllCacheKeysByPattern(patten) {
+  const cacher = manager.getClient("cacher");
+  return cacher.sendCommandAsync("KEYS",[patten]);
 
 }
 
+function normalizeCache(data) {
+  return JSON.parse(data);
+}
+
 module.exports = {
-  getUserFromCache
+  updateCache,
+  retriveCache,
+  deleteCache,
+  getAllCacheKeysByPattern,
+  normalizeCache,
 };

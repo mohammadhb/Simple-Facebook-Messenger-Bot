@@ -1,45 +1,41 @@
-const { User } = require("../../database/mongodb").Models;
-const { sendMessageWithSeenAndTyping } = require("../../requests");
-const cacheUtil = require("../../utils/cache");
+const { User } = require("../../repository");
+const {
+  messenger: { sendMessageWithSeenAndTyping },
+} = require("../../requests");
 
-async function register(user, message, routes) {
+async function register(user, message, quick_response, routes,returnToManager) {
   try {
-    const userCache = await cacheUtil.getUserFromCache(user.id);
-
-    await sendMessageWithSeenAndTyping(user.id, "Hi, this is your first time with me!");
-    await sendMessageWithSeenAndTyping(user.id, "What's your name?");
-    userCache.status = routes.next;
-  } catch (error) {
-    // console.error(error);
-  }
-}
-
-async function getFirstName(user, message, routes) {
-  try {
-    const userCache = await cacheUtil.getUserFromCache(user.id);
-    if (message) {
-      await new User().updateById(user.id, { firstname: message });
-      await sendMessageWithSeenAndTyping(user.id, `${message}, What's your birthday date?`);
-      userCache.firstname = message;
-      userCache.status = routes.next;
-    } else {
-      //On error
-      await sendMessageWithSeenAndTyping(user.id, "That's not correct!");
-      userCache.status = routes.previous;
-    }
+    await new User(user).updateState(routes.next);
+    await sendMessageWithSeenAndTyping(user.sender_id, "Hi, this is your first time with me!");
+    await sendMessageWithSeenAndTyping(user.sender_id, "What's your name?");
   } catch (error) {
     console.error(error);
   }
 }
 
-async function getBirthday(user, message, routes) {
+async function getFirstName(user, message, quick_response, routes,returnToManager) {
   try {
-    const userCache = await cacheUtil.getUserFromCache(user.id);
     if (message) {
-      await new User().updateById(user.id, { birthdate: message });
+      await new User(user).updateState(routes.next);
+      await new User(user).updateFirstname(message);
+      await sendMessageWithSeenAndTyping(user.sender_id, `${message}, What's your birthday date?`);
+    } else {
+      //On error
+      await sendMessageWithSeenAndTyping(user.sender_id, "That's not correct!");
+    }
+  } catch (error) {
+    console.error(error.response);
+  }
+}
+
+async function getBirthday(user, message, quick_response, routes,returnToManager) {
+  try {
+    if (message&&/([0-9]){4}(-)([0-9]){2}(-)([0-9]){2}/.test(message)) {
+      await new User(user).updateState(routes.next);
+      await new User(user).updateBirthdate(message);
       await sendMessageWithSeenAndTyping(
-        user.id,
-        `${userCache.user.firstname}, Do you want to know how many days are till your birthday ?`,
+        user.sender_id,
+        `${user.firstname}, Do you want to know how many days are till your birthday ?`,
         [
           {
             key: "Nope",
@@ -51,10 +47,8 @@ async function getBirthday(user, message, routes) {
           },
         ]
       );
-      userCache.birthdate = message;
-      userCache.status = routes.next;
     } else {
-      //On error
+      await sendMessageWithSeenAndTyping(user.sender_id, "That's not correct! Please Send me birthday in \"yyyy-mm-dd\" format");
     }
   } catch (error) {
     console.error(error);
@@ -67,7 +61,7 @@ function calculateDayDifferenceFrom(date) {
   return result;
 }
 
-async function getAnswerForDaysTillBirthday(user, message, routes) {
+async function getAnswerForDaysTillBirthday(user, message, quick_response, routes,returnToManager) {
   const possibleReplies = [
     {
       key: "yeah",
@@ -96,30 +90,23 @@ async function getAnswerForDaysTillBirthday(user, message, routes) {
   ];
 
   try {
-    const userCache = await cacheUtil.getUserFromCache(user.id);
     if (message) {
       const reply = possibleReplies.find((reply) => reply.key == message.toLowerCase());
       if (reply) {
-        
-        if(reply.value){
-          await sendMessageWithSeenAndTyping(
-            user.id,
-            `There are ${calculateDayDifferenceFrom(
-              userCache.user.birthday
-            )} days left until your next birthday.`
-          );
-          userCache.status = routes.next;
-        }else {
-          await sendMessageWithSeenAndTyping(
-            user.id,
-            "👋 Goodbye"
-          );
-          userCache.status = routes.next;
+        if (reply.value) {
+          await sendMessageWithSeenAndTyping(user.sender_id,`There are ${calculateDayDifferenceFrom(user.birthdate)} days left until your next birthday.`);
+        } else {
+          await sendMessageWithSeenAndTyping(user.sender_id, "👋 Goodbye");
         }
+        await new User(user).updateState(routes.next);
+
+        await sendMessageWithSeenAndTyping(user.sender_id, "Ok, You are now registred in our system.");
+        user.state = routes.next;
+        returnToManager(user,message);
 
       } else {
         await sendMessageWithSeenAndTyping(
-          user.id,
+          user.sender_id,
           "Sorry I didn't quite get that! Please answer with yes or no.",
           [
             {
@@ -137,7 +124,7 @@ async function getAnswerForDaysTillBirthday(user, message, routes) {
       //On error
     }
   } catch (error) {
-    console.error(error);
+    console.error(error.response.data);
   }
 }
 
