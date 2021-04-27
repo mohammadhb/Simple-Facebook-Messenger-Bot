@@ -33,22 +33,6 @@ module.exports = (sequelize, DataTypes) => {
     }
   );
 
-  model.associate = function (models) {
-
-    model.belongsTo(models.User, {
-      foreignKey: "recipientId",
-      as: "reciever",
-      onDelete: "CASCADE",
-    });
-
-    model.belongsTo(models.User, {
-      foreignKey: "senderId",
-      as: "sender",
-      onDelete: "CASCADE",
-    });
-
-  };
-
   return model;
 
 };

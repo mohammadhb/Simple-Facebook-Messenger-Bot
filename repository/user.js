@@ -9,42 +9,46 @@ class Repository extends IRepository {
     if (this.isMongoDB) return this.model.getBySenderId(id);
     return this.model.findOne({
       where: {
-        id,
+        sender_id: id,
       },
     });
   }
   updateFirstname(data) {
-    console.log(this.data.id,this.data._id,data);
+    console.log(this.data.id, this.data._id, data);
     if (this.isMongoDB)
       return this.model.updateById(this.data._id, {
         $set: {
           firstname: data,
         },
       });
-    return this.model.findOne(
+    return this.model.update(
+      {
+        firstname: data,
+      },
       {
         where: {
-          id:this.data.id,
+          id: this.data.id,
         },
-      },
-      data
+      }
     );
   }
   updateBirthdate(data) {
-    console.log(this.data.id,this.data._id,data);
+    console.log(this.data.id, this.data._id, data);
     if (this.isMongoDB)
       return this.model.updateById(this.data.id, {
         $set: {
           birthdate: data,
         },
       });
-    return this.model.findOne(
+    return this.model.update(
+      {
+        birthdate: new Date(data),
+      },
       {
         where: {
-          id:this.data.id,
+          id: this.data.id,
         },
-      },
-      data
+      }
     );
   }
   updateState(data) {
@@ -54,13 +58,15 @@ class Repository extends IRepository {
           state: data,
         },
       });
-    return this.model.findOne(
+    return this.model.update(
+      {
+        state: data,
+      },
       {
         where: {
-          id:this.data.id,
+          id: this.data.id,
         },
-      },
-      data
+      }
     );
   }
 }

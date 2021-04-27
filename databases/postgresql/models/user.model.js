@@ -10,10 +10,13 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
         unique: true,
       },
+      sender_id: {
+        type: DataTypes.STRING,
+      },
       firstname: {
         type: DataTypes.STRING,
       },
-      birthday: {
+      birthdate: {
         type: DataTypes.DATE,
       },
       state: {
@@ -24,23 +27,5 @@ module.exports = (sequelize, DataTypes) => {
       // Other model options go here
     }
   );
-
-  model.associate = function (models) {
-
-    model.hasMany(models.Message, {
-      foreignKey: "recipientId",
-      as: "recievedMessages",
-      onDelete: "CASCADE",
-    });
-
-    model.hasMany(models.Message, {
-      foreignKey: "senderId",
-      as: "sentMessages",
-      onDelete: "CASCADE",
-    });
-
-  };
-
-
   return model;
 };

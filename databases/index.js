@@ -5,7 +5,7 @@ const { database:{config,database} } = require("../config");
 
 // Redis Connection Helpers
 const startRedis = ()=>{
-  redis.connectDatabase(config, console.error.bind(console, "connection error:"), () => {});
+  redis.connectDatabase(config.temporary, console.error.bind(console, "connection error:"), () => {});
 };
 const stopRedis = ()=>{
   redis.disconnectDatabase();
@@ -13,7 +13,7 @@ const stopRedis = ()=>{
 
 // Mongo DB Connection Helpers
 const startMongoDB = ()=>{
-  mongodb.connectDatabase(config, console.error.bind(console, "connection error:"), () => {
+  mongodb.connectDatabase(config.persistant, console.error.bind(console, "connection error:"), () => {
     console.log("MongoDB is Connected.");
   });
 };
@@ -23,8 +23,14 @@ const stopMongoDB = ()=>{
 
 // Redis Connection Helpers
 const startPostgresql = ()=>{
-  postgresql.connectDatabase(config, console.error.bind(console, "connection error:"), () => {});
-  postgresql.connectModels(postgresql.getClient());
+  postgresql.connectDatabase(config.persistant, (error)=>{
+    console.log(error);
+  }, () => {
+    console.log("Postgreql is Connected.");
+    postgresql.connectModels(postgresql.getClient());
+    postgresql.getClient().sync();
+  });
+  
 };
 const stopPostgresql = ()=>{
   postgresql.getClient().close();

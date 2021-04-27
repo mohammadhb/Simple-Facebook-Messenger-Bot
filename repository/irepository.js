@@ -11,7 +11,17 @@ class IRepository {
 
   create() {
     if (this.isMongoDB) return this.model.create(this.data);
-    return this.model.insert(this.data);
+    return new this.model(this.data).save();
+  }
+
+  getAllPaginated() {
+    if (this.isMongoDB) return this.model.getAllPageinated();
+    return this.model.findAll();
+  }
+
+  countAll() {
+    if (this.isMongoDB) return this.model.countAll();
+    return this.model.findAll();
   }
 
   getAll() {
@@ -21,6 +31,15 @@ class IRepository {
 
   getById(id) {
     if (this.isMongoDB) return this.model.getById(id);
+    return this.model.findOne({
+      where: {
+        id,
+      },
+    });
+  }
+
+  deleteById(id) {
+    if (this.isMongoDB) return this.model.deleteOne({_id:id});
     return this.model.findOne({
       where: {
         id,
