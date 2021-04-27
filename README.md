@@ -53,12 +53,13 @@ root
 
 ### Getting Started:
 
-    To get the project running first start to clone the project and then follow the instructions :
-    1. install the requirements                                 ([Installation](#installation))
-    2. Configure the project                                    ([Configuration](#configuration))
-    3. Integrate and Develop any Services you need*             ([Building a Service](#building-a-service))
-    4. Run the Project                                          ([Usage](#usage))
-    5. For any more information about End-Points Checkout here* ([Documents](#documents))
+To get the project running first start to clone the project and then follow the instructions :
+
+1. install the requirements                                 ([Installation](#installation))
+2. Configure the project                                    ([Configuration](#configuration))
+3. Integrate and Develop any Services you need*             ([Building a Service](#building-a-service))
+4. Run the Project                                          ([Usage](#usage))
+5. For any more information about End-Points Checkout here* ([Documents](#documents))
 
 *Optional Instruction
 
@@ -81,20 +82,54 @@ cp .env.example .env
 - Configuration Table in `.env` File :
 
 1. Messenger Configurations
-Configuration Key | Description
------------------ | -----------
-`MESSENGER_BOT_VERIFICATION_TOKEN` | Verification token -> Messenger bot settings on Facebook when Verifying URL callback
-`MESSENGER_BOT_ACCESS_TOKEN` | Access token -> Messenger bot settings on Facebook when Generating Access Token
+
+Configuration Key | Title | Description
+----------------- | ----- | -----------
+`MESSENGER_BOT_VERIFICATION_TOKEN` | Verification token | Messenger bot settings on Facebook when Verifying URL callback
+`MESSENGER_BOT_ACCESS_TOKEN` | Access token | Messenger bot settings on Facebook when Generating Access Token
 
 1. Database Configurations
-Configuration Key | Description
------------------ | -----------
-`DATABASE` | Database Type -> You can select either `MONGODB` or `POSTGRESQL` but anything else would endup on `MONGODB`
-`POSTGRESQL_DATABASE_NAME` | Database Name -> The database you are connecting to
-`POSTGRESQL_DATABASE_HOST` | Database Host -> The IP or name of the host that database is on it
-`POSTGRESQL_DATABASE_PORT` | Database Port -> Database Port
-`POSTGRESQL_DATABASE_USER` | Database Username -> Database Username
-`POSTGRESQL_DATABASE_PASS` | Database Password -> Database Password
+
+Configuration Key / Category | Title | Description
+----------------- | ----- | -----------
+**General** | - | -
+`DATABASE` | Database Type | You can select either `MONGODB` or `POSTGRESQL` but anything else would endup on `MONGODB`
+**Postgresql** | - | -
+`POSTGRESQL_DATABASE_NAME` | Database Name | The database you are connecting to
+`POSTGRESQL_DATABASE_HOST` | Database Host | The IP or name of the host that database is on it
+`POSTGRESQL_DATABASE_PORT` | Database Port | Database Port
+`POSTGRESQL_DATABASE_USER` | Database Username | Database Username
+`POSTGRESQL_DATABASE_PASS` | Database Password | Database Password
+**Postgresql Test Environment** | - | -
+`POSTGRESQL_TEST_DATABASE_NAME` | Database Name | The database you are connecting to
+`POSTGRESQL_TEST_DATABASE_HOST` | Database Host | The IP or name of the host that database is on it
+`POSTGRESQL_TEST_DATABASE_PORT` | Database Port | Database Port
+`POSTGRESQL_TEST_DATABASE_USER` | Database Username | Database Username
+`POSTGRESQL_TEST_DATABASE_PASS` | Database Password | Database Password
+**Mongo DB** | - | -
+`MONGODB_DATABASE_NAME` | Database Name | The database you are connecting to
+`MONGODB_DATABASE_HOST` | Database Host | The IP or name of the host that database is on it
+`MONGODB_DATABASE_PORT` | Database Port | Database Port
+`MONGODB_DATABASE_USER` | Database Username | Database Username
+`MONGODB_DATABASE_PASS` | Database Password | Database Password
+**Mongo DB Test Environment** | - | -
+`MONGODB_TEST_DATABASE_NAME` | Database Name | The database you are connecting to
+`MONGODB_TEST_DATABASE_HOST` | Database Host | The IP or name of the host that database is on it
+`MONGODB_TEST_DATABASE_PORT` | Database Port | Database Port
+`MONGODB_TEST_DATABASE_USER` | Database Username | Database Username
+`MONGODB_TEST_DATABASE_PASS` | Database Password | Database Password
+**Redis** | - | -
+`REDIS_DATABASE_NAME` | Database Name | The database you are connecting to
+`REDIS_DATABASE_HOST` | Database Host | The IP or name of the host that database is on it
+`REDIS_DATABASE_PORT` | Database Port | Database Port
+`REDIS_DATABASE_USER` | Database Username | Database Username
+`REDIS_DATABASE_PASS` | Database Password | Database Password
+**Redis Test Environment** | - | -
+`REDIS_TEST_DATABASE_NAME` | Database Name | The database you are connecting to
+`REDIS_TEST_DATABASE_HOST` | Database Host | The IP or name of the host that database is on it
+`REDIS_TEST_DATABASE_PORT` | Database Port | Database Port
+`REDIS_TEST_DATABASE_USER` | Database Username | Database Username
+`REDIS_TEST_DATABASE_PASS` | Database Password | Database Password
 
 DATABASE
 
