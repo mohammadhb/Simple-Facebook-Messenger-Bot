@@ -3,7 +3,9 @@ const {
   messenger: { sendMessageWithSeenAndTyping },
 } = require("../../requests");
 
-async function register(user, message, quick_response, routes,returnToManager) {
+// Because i wanted to respect the same pattern on Calling Services
+// eslint-disable-next-line no-unused-vars
+async function register(user, message, quick_response, routes, returnToManager) {
   try {
     await new User(user).updateState(routes.next);
     await sendMessageWithSeenAndTyping(user.sender_id, "Hi, this is your first time with me!");
@@ -13,7 +15,9 @@ async function register(user, message, quick_response, routes,returnToManager) {
   }
 }
 
-async function getFirstName(user, message, quick_response, routes,returnToManager) {
+// Because i wanted to respect the same pattern on Calling Services
+// eslint-disable-next-line no-unused-vars
+async function getFirstName(user, message, quick_response, routes, returnToManager) {
   try {
     if (message) {
       await new User(user).updateState(routes.next);
@@ -28,9 +32,11 @@ async function getFirstName(user, message, quick_response, routes,returnToManage
   }
 }
 
-async function getBirthday(user, message, quick_response, routes,returnToManager) {
+// Because i wanted to respect the same pattern on Calling Services
+// eslint-disable-next-line no-unused-vars
+async function getBirthday(user, message, quick_response, routes, returnToManager) {
   try {
-    if (message&&/([0-9]){4}(-)([0-9]){2}(-)([0-9]){2}/.test(message)) {
+    if (message && /([0-9]){4}(-)([0-9]){2}(-)([0-9]){2}/.test(message)) {
       await new User(user).updateState(routes.next);
       await new User(user).updateBirthdate(message);
       await sendMessageWithSeenAndTyping(
@@ -48,7 +54,10 @@ async function getBirthday(user, message, quick_response, routes,returnToManager
         ]
       );
     } else {
-      await sendMessageWithSeenAndTyping(user.sender_id, "That's not correct! Please Send me birthday in \"yyyy-mm-dd\" format");
+      await sendMessageWithSeenAndTyping(
+        user.sender_id,
+        "That's not correct! Please Send me birthday in \"yyyy-mm-dd\" format"
+      );
     }
   } catch (error) {
     console.error(error);
@@ -61,7 +70,7 @@ function calculateDayDifferenceFrom(date) {
   return result;
 }
 
-async function getAnswerForDaysTillBirthday(user, message, quick_response, routes,returnToManager) {
+async function getAnswerForDaysTillBirthday(user, message, quick_response, routes, returnToManager) {
   const possibleReplies = [
     {
       key: "yeah",
@@ -94,7 +103,10 @@ async function getAnswerForDaysTillBirthday(user, message, quick_response, route
       const reply = possibleReplies.find((reply) => reply.key == message.toLowerCase());
       if (reply) {
         if (reply.value) {
-          await sendMessageWithSeenAndTyping(user.sender_id,`There are ${calculateDayDifferenceFrom(user.birthdate)} days left until your next birthday.`);
+          await sendMessageWithSeenAndTyping(
+            user.sender_id,
+            `There are ${calculateDayDifferenceFrom(user.birthdate)} days left until your next birthday.`
+          );
         } else {
           await sendMessageWithSeenAndTyping(user.sender_id, "👋 Goodbye");
         }
@@ -102,8 +114,7 @@ async function getAnswerForDaysTillBirthday(user, message, quick_response, route
 
         await sendMessageWithSeenAndTyping(user.sender_id, "Ok, You are now registred in our system.");
         user.state = routes.next;
-        returnToManager(user,message);
-
+        returnToManager(user, message);
       } else {
         await sendMessageWithSeenAndTyping(
           user.sender_id,

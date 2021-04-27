@@ -1,4 +1,5 @@
 # Messenger
+
 ## A Simple Facebook Bot Messenger
 
 <img alt="Sample demo of The Messenger Bot" src="./example.gif" width="270" height="480">
@@ -20,35 +21,35 @@
 
 ### Technical Features:
 
-Here are addential **Key Technical Features** implemented into this project.
-- [x] **Repository Pattern :** Implemented a single integrated DAO API that is exposed to serve the different perpose of operating on data.
+Here are additional **Key Technical Features** implemented into this project.
+- [x] **Repository Pattern :** Implemented a single integrated DAO API that is exposed to serve the different purpose of operating on data.
 - [x] **Service Discovery Pattern and Being Service-Based :** This Bot is based on a variety of Services that is Implemented in this platform by default ( e.g. Register, Weather). Also developer can add Any Services with minimum effort by just Adding the config and their service-plugin into the Service section.
-- [x] **Caching Data :** For performance perposes, I used Redis to cache the data it became much more faster with caching methods ( From 100ms to 4ms On my Personal System )
+- [x] **Caching Data :** For performance purposes, I used Redis to cache the data it became more faster with caching methods ( From 100ms to 4ms On my Personal System )
 - [x] **Automatic Database Configuration Selection :** You can select your own Database you just need to change the **DATABASE** variable in **.env** and you're good to go!
 
 ## Directory Layout
 
 ```
 root
-├── config       # Configurations
-├── constants    # Constant Variables
-├── controllers  # Router Controllers
-├── repository   # DAO Repository
-├── middlewares  # Express middlewares
-├── databases    # Database Core
-|    |── mongodb     # Mongoose for Mongo DB
-|    |── postgresql  # Sequelize for Postgresql
-|    └── redis       # Redis Client for Caching
-├── router       # Routes and Router
-|    |──conversation # Facebook Webhooks routes
-|    └── message     # Messages routes
-├── requests     # Third party libraries/services
-├── services     # Service Discovery and Services
-|    |── user        # User Service
-|    |── weather     # Weather Service
-|    └── example     # An Example Service to be added by you
-├── tests        # Tests
-└── utils        # Utility and Handy Functions
+├── config              # Configurations
+├── constants           # Constant Variables
+├── controllers         # Router Controllers
+├── repository          # DAO Repository
+├── middlewares         # Express middlewares
+├── databases           # Database Core
+|    |── mongodb        # Mongoose for MongoDB
+|    |── postgresql     # Sequelize for Postgresql
+|    └── redis          # Redis Client for Caching
+├── router              # Routes and Router
+|    |──conversation    # Facebook Webhooks routes
+|    └── message        # Messages routes
+├── requests            # Third party libraries/services
+├── services            # Service Discovery and Services
+|    |── user           # User Service
+|    |── weather        # Weather Service
+|    └── example        # An Example Service to be added by you
+├── tests               # Tests
+└── utils               # Utility and Handy Functions
 ```
 
 ### Getting Started:
@@ -68,6 +69,7 @@ To get the project running first start to clone the project and then follow the 
 ### Installation:
 
 - Install required packages
+
 ```shell script
 npm i
 ```
@@ -75,6 +77,7 @@ npm i
 ### Configuration
 
 - Copy and modify .env file for Environment Variables
+
 ```shell script
 cp .env.example .env
 ```
@@ -106,13 +109,13 @@ Configuration Key / Category | Title | Description
 `POSTGRESQL_TEST_DATABASE_PORT` | Database Port | Database Port
 `POSTGRESQL_TEST_DATABASE_USER` | Database Username | Database Username
 `POSTGRESQL_TEST_DATABASE_PASS` | Database Password | Database Password
-**Mongo DB** | - | -
+**MongoDB** | - | -
 `MONGODB_DATABASE_NAME` | Database Name | The database you are connecting to
 `MONGODB_DATABASE_HOST` | Database Host | The IP or name of the host that database is on it
 `MONGODB_DATABASE_PORT` | Database Port | Database Port
 `MONGODB_DATABASE_USER` | Database Username | Database Username
 `MONGODB_DATABASE_PASS` | Database Password | Database Password
-**Mongo DB Test Environment** | - | -
+**MongoDB Test Environment** | - | -
 `MONGODB_TEST_DATABASE_NAME` | Database Name | The database you are connecting to
 `MONGODB_TEST_DATABASE_HOST` | Database Host | The IP or name of the host that database is on it
 `MONGODB_TEST_DATABASE_PORT` | Database Port | Database Port
@@ -131,22 +134,23 @@ Configuration Key / Category | Title | Description
 `REDIS_TEST_DATABASE_USER` | Database Username | Database Username
 `REDIS_TEST_DATABASE_PASS` | Database Password | Database Password
 
-DATABASE
-
 ### Usage
 
-Run the project
+- Run the project
+
 ```shell script
 npm start
 ```
 
-For the development perposes
+- For the development purposes
+
 ```shell script
 npm i -g nodemon
 npm run dev
 ```
 
-For the deployment perposes
+- For the deployment purposes
+
 ```shell script
 docker-compose up -d
 ```
@@ -154,19 +158,22 @@ docker-compose up -d
 
 ### Tests
 
-Run the tests
+- Run the tests
+
 ```shell script
 npm test
 ```
 
-For coverage run
+- For coverage run
+
 ```shell script
 npm run coverage
 ```
 
 ### Documents
 
-For generate and serve documents
+- For generate and serve documents
+
 ```shell script
 npm run doc
 ```

@@ -4,6 +4,8 @@ const {
   weather: { searchCities, getWeatherByCityId },
 } = require("../../requests");
 
+// Because i wanted to respect the same pattern on Calling Services
+// eslint-disable-next-line no-unused-vars
 async function askCity(user, message, quick_response, routes, returnToManager) {
   try {
     await sendMessageWithSeenAndTyping(user.sender_id, "Where do you live?");
@@ -13,6 +15,8 @@ async function askCity(user, message, quick_response, routes, returnToManager) {
   }
 }
 
+// Because i wanted to respect the same pattern on Calling Services
+// eslint-disable-next-line no-unused-vars
 async function queryCities(user, message, quick_response, routes, returnToManager) {
   try {
     if (message) {
@@ -50,16 +54,14 @@ async function getWeather(user, message, quick_response, routes, returnToManager
   if (message) {
     await sendMessageWithSeenAndTyping(user.sender_id, `Retriving "${message}" Weather ... Hang Tight ...`);
     const weather = (await getWeatherByCityId(quick_response)).data.current;
-    console.log(weather);
     await sendMessageWithSeenAndTyping(
       user.sender_id,
       `Looks like its ${weather.condition.text} with ${weather.temp_c}°C and ${weather.humidity}% Humidity`
     );
     await new User(user).updateState(routes.next);
-    
-    user.state = routes.next;
-    returnToManager(user,message);
 
+    user.state = routes.next;
+    returnToManager(user, message);
   } else {
     //On error
     await sendMessageWithSeenAndTyping(user.sender_id, "That's not correct!");

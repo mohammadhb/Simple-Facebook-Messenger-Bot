@@ -1,3 +1,1 @@
-module.exports = [
-  ...require("./register"),
-];
+module.exports = [...require("./register")];

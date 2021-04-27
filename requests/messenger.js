@@ -68,5 +68,5 @@ module.exports = {
   markSeen,
   setTyping,
   sendMessage,
-  sendMessageWithSeenAndTyping
+  sendMessageWithSeenAndTyping,
 };

@@ -14,7 +14,6 @@ class Repository extends IRepository {
     });
   }
   updateFirstname(data) {
-    console.log(this.data.id, this.data._id, data);
     if (this.isMongoDB)
       return this.model.updateById(this.data._id, {
         $set: {
@@ -33,7 +32,6 @@ class Repository extends IRepository {
     );
   }
   updateBirthdate(data) {
-    console.log(this.data.id, this.data._id, data);
     if (this.isMongoDB)
       return this.model.updateById(this.data.id, {
         $set: {

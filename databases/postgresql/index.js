@@ -16,11 +16,14 @@ function connectDatabase({ database, username, host, port, password, dialect, op
     logging: console.log,
     ...options,
   });
-  sequelize.authenticate().then(resolve=>{
-    onOpen(resolve);
-  },reject=>{
-    onError(reject);
-  });
+  sequelize.authenticate().then(
+    (resolve) => {
+      onOpen(resolve);
+    },
+    (reject) => {
+      onError(reject);
+    }
+  );
 }
 
 function connectModels(sequelize) {

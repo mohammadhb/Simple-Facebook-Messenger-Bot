@@ -1,7 +1,7 @@
 const { Message } = require("../repository");
 const {
-  cache: { updateCache,deleteCache,getAllCacheKeysByPattern },
-} = require("../utils/index");
+  cache: { updateCache, deleteCache, getAllCacheKeysByPattern },
+} = require("../utils");
 
 /**
  * @swagger
@@ -67,22 +67,21 @@ const {
 
 //Gets all the messages that sent along the bot
 async function getAllMessages(request, response) {
-
-  let {page=1,limit=10} = request.query;
-  page=parseInt(page);
-  limit=parseInt(limit);
+  let { page = 1, limit = 10 } = request.query;
+  page = parseInt(page);
+  limit = parseInt(limit);
 
   const messages = await new Message().getAllPaginated(),
     countAllMessages = await new Message().countAll();
 
   const data = {
-    data:messages,
-    meta:{
-      count:countAllMessages,
-      pages:Math.ceil(countAllMessages/limit),
+    data: messages,
+    meta: {
+      count: countAllMessages,
+      pages: Math.ceil(countAllMessages / limit),
       page,
-      limit
-    }
+      limit,
+    },
   };
 
   response.status(200).json({
@@ -95,7 +94,6 @@ async function getAllMessages(request, response) {
   } catch (error) {
     console.error(error);
   }
-
 }
 
 /**
@@ -162,12 +160,11 @@ async function getAllMessages(request, response) {
 
 //Gets specific Message
 async function getMessage(request, response) {
-
   const id = request.params.id;
   const message = await new Message().getById(id);
 
   const data = {
-    data:message
+    data: message,
   };
 
   response.status(200).json({
@@ -180,7 +177,6 @@ async function getMessage(request, response) {
   } catch (error) {
     console.error(error);
   }
-
 }
 
 /**
@@ -256,15 +252,13 @@ async function deleteMessage(request, response) {
   try {
     await deleteCache(request.cacheId);
     const cacheKeys = await getAllCacheKeysByPattern(`${request.cacheKey}/*/*`);
-    for ( const cacheKey of cacheKeys ){
+    for (const cacheKey of cacheKeys) {
       await deleteCache(cacheKey);
     }
-
   } catch (error) {
     // Error tracing (e.g. Sentry)
     console.error(error);
   }
-
 }
 
 module.exports = {

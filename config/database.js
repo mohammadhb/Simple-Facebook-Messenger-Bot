@@ -68,8 +68,6 @@ const redisConfig =
       options: {},
     };
 
-console.log(process.env.DATABASE);
-
 module.exports = {
   database,
   config: {

@@ -19,8 +19,7 @@ function deleteCache(id) {
 
 async function getAllCacheKeysByPattern(patten) {
   const cacher = manager.getClient("cacher");
-  return cacher.sendCommandAsync("KEYS",[patten]);
-
+  return cacher.sendCommandAsync("KEYS", [patten]);
 }
 
 function normalizeCache(data) {

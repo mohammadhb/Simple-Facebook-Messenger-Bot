@@ -24,17 +24,13 @@ module.exports = (sequelize, DataTypes) => {
       },
       timestamp: {
         type: DataTypes.DATE,
-      }
+      },
     },
     {
       // Other model options go here
-      instanceMethods: {
-      }
+      instanceMethods: {},
     }
   );
 
   return model;
-
 };
-
-

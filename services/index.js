@@ -17,7 +17,6 @@ function discoverServices() {
 
 function router(route) {
   const services = discoverServices();
-  // console.log(services);
   return services.find((service) => service.route == route);
 }
 
@@ -35,27 +34,21 @@ function mainmenu(user) {
           };
         })
     );
-    // console.log(discoverServices());
   } catch (e) {
     console.log(e.response.data);
   }
-
-  console.log(`Wellcome ${user.firstname}, What can i do for you today?`);
 }
 
 async function serviceManager(user, message, quick_response) {
-  console.log(user);
-
   if (user.state) {
     const action = router(user.state);
-    return action.service(user, message, quick_response, action.routes,serviceManager);
+    return action.service(user, message, quick_response, action.routes, serviceManager);
   } else if (!user.firstname) {
     const action = router("/user/register");
-    return action.service(user, message, quick_response, action.routes,serviceManager);
+    return action.service(user, message, quick_response, action.routes, serviceManager);
   } else if (quick_response) {
-    console.log(quick_response);
     const action = router(quick_response);
-    return action.service(user, message, quick_response, action.routes,serviceManager);
+    return action.service(user, message, quick_response, action.routes, serviceManager);
   }
 
   return mainmenu(user);

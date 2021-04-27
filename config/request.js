@@ -1,3 +1,6 @@
+const { access_token } = require("./bot");
+const { weather_api_key } = require("./api_key");
+
 exports.messenger = {
   config: {
     baseURL: "https://graph.facebook.com/v7.0",
@@ -6,7 +9,7 @@ exports.messenger = {
     },
     responseType: "json",
   },
-  access_token: process.env.MESSENGER_BOT_ACCESS_TOKEN,
+  access_token,
 };
 
 exports.weather = {
@@ -17,5 +20,5 @@ exports.weather = {
     },
     responseType: "json",
   },
-  api_key: process.env.WEATHER_SERVICE_API_KEY,
+  api_key: weather_api_key,
 };

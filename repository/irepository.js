@@ -1,4 +1,4 @@
-const { database } = require("../databases/index");
+const { database } = require("../databases");
 
 class IRepository {
   constructor(data, model) {
@@ -15,7 +15,7 @@ class IRepository {
   }
 
   getAllPaginated() {
-    if (this.isMongoDB) return this.model.getAllPageinated();
+    if (this.isMongoDB) return this.model.getAllPaginated();
     return this.model.findAll();
   }
 
@@ -39,7 +39,7 @@ class IRepository {
   }
 
   deleteById(id) {
-    if (this.isMongoDB) return this.model.deleteOne({_id:id});
+    if (this.isMongoDB) return this.model.deleteOne({ _id: id });
     return this.model.findOne({
       where: {
         id,

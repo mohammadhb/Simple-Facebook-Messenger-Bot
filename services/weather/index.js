@@ -1,3 +1,1 @@
-module.exports = [
-  ...require("./check")
-];
+module.exports = [...require("./check")];

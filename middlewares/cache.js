@@ -1,6 +1,6 @@
 const {
   cache: { retriveCache, normalizeCache },
-} = require("../utils/index");
+} = require("../utils");
 
 function cacheMany(id) {
   return async function cacheManyMiddleware(request, response, next) {
