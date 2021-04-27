@@ -1,6 +1,6 @@
 const { Message } = require("../repository");
 const {
-  cache: { updateCache },
+  cache: { updateCache,deleteCache,getAllCacheKeysByPattern },
 } = require("../utils/index");
 
 /**
@@ -68,16 +68,31 @@ const {
 //Gets all the messages that sent along the bot
 async function getAllMessages(request, response) {
 
-  const messages = await new Message().getAll();
+  let {page=1,limit=10} = request.query;
+  page=parseInt(page);
+  limit=parseInt(limit);
+
+  const messages = await new Message().getAllPaginated(),
+    countAllMessages = await new Message().countAll();
+
+  const data = {
+    data:messages,
+    meta:{
+      count:countAllMessages,
+      pages:Math.ceil(countAllMessages/limit),
+      page,
+      limit
+    }
+  };
+
   response.status(200).json({
-    data: messages,
+    ...data,
     errors: [],
   });
 
   try {
-    await updateCache(request.cacheId, messages);
+    await updateCache(request.cacheId, data);
   } catch (error) {
-    // Error tracing (e.g. Sentry)
     console.error(error);
   }
 
@@ -150,15 +165,19 @@ async function getMessage(request, response) {
 
   const id = request.params.id;
   const message = await new Message().getById(id);
+
+  const data = {
+    data:message
+  };
+
   response.status(200).json({
-    data: message,
+    ...data,
     errors: [],
   });
 
   try {
-    await updateCache(request.cacheId, message);
+    await updateCache(request.cacheId, data);
   } catch (error) {
-    // Error tracing (e.g. Sentry)
     console.error(error);
   }
 
@@ -228,14 +247,19 @@ async function getMessage(request, response) {
 //Deletes specific Message
 async function deleteMessage(request, response) {
   const id = request.params.id;
-  const message = await Message.deleteOne({ _id: id });
+  const message = await new Message().deleteById(id);
   response.status(200).json({
     data: message,
     errors: [],
   });
 
   try {
-    await updateCache(request.cacheId, message);
+    await deleteCache(request.cacheId);
+    const cacheKeys = await getAllCacheKeysByPattern(`${request.cacheKey}/*/*`);
+    for ( const cacheKey of cacheKeys ){
+      await deleteCache(cacheKey);
+    }
+
   } catch (error) {
     // Error tracing (e.g. Sentry)
     console.error(error);

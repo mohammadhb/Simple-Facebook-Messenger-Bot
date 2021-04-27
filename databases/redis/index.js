@@ -13,7 +13,7 @@ function connectDatabase({database,username,host,port,password,options},onError,
     user:username,
     password:password,
     host:host,
-    port:port,
+    port:port|6379,
     db:Object.keys(clients).length,
     ...options
   });
@@ -32,12 +32,12 @@ async function disconnectDatabase(){
   
 }
 
-function getClients(database){
+function getClient(database){
   return clients[database];
 }
 
 module.exports = {
   connectDatabase,
   disconnectDatabase,
-  getClients
+  getClient
 };

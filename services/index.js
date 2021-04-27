@@ -12,9 +12,7 @@ function discoverServices() {
     .map((folder) => path.join(__dirname, folder)) // Normilize the service path
     .map((path) => require(path)); // Require the service path
 
-  return services.reduce((prev, curr) => {
-    return prev.concat(curr);
-  }, []);
+  return services.reduce((prev, curr) => prev.concat(curr), []);
 }
 
 function router(route) {
@@ -27,7 +25,7 @@ function mainmenu(user) {
   try {
     sendMessageWithSeenAndTyping(
       user.sender_id,
-      `Wellcome ${user.firstname}, What can i do for you today?`,
+      `${user.firstname}, What else i can do for you?`,
       discoverServices()
         .filter((service) => !service.hidden)
         .map((service) => {
@@ -46,17 +44,18 @@ function mainmenu(user) {
 }
 
 async function serviceManager(user, message, quick_response) {
-  
+  console.log(user);
+
   if (user.state) {
     const action = router(user.state);
-    return action.service(user, message, quick_response, action.routes);
+    return action.service(user, message, quick_response, action.routes,serviceManager);
   } else if (!user.firstname) {
     const action = router("/user/register");
-    return action.service(user, message, quick_response, action.routes);
+    return action.service(user, message, quick_response, action.routes,serviceManager);
   } else if (quick_response) {
     console.log(quick_response);
     const action = router(quick_response);
-    return action.service(user, message, quick_response, action.routes);
+    return action.service(user, message, quick_response, action.routes,serviceManager);
   }
 
   return mainmenu(user);

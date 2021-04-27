@@ -60,27 +60,11 @@ const schema = new Schema({
 
 });
 
-schema.methods.getAllPageinated = function(filters,page,pageLimit){
+schema.statics.getAllPageinated = function(page=1,pageLimit=10){
 
   const model = this.model(modelName);
 
-  let query = {
-      // status:'active'
-    },skip=(page-1)*pageLimit,limit=pageLimit;
-
-  let queryORs = [];
-
-  if(filters.type){
-
-    filters.type.forEach(type => {
-
-      queryORs.push({
-        type
-      });
-
-    });
-
-  }
+  const query = {},skip=(page-1)*pageLimit,limit=pageLimit;
 
   const fields = {
     __v:0,
@@ -88,10 +72,20 @@ schema.methods.getAllPageinated = function(filters,page,pageLimit){
 
   return model
     .find(query)
-    .populate("Message","-__v -_data_lifecycle")
     .skip(skip)
     .limit(limit)
     .select(fields)
+    .exec();
+
+};
+
+schema.statics.countAll = function(){
+
+  const model = this.model(modelName);
+  const query = {};
+
+  return model
+    .count(query)
     .exec();
 
 };
@@ -116,7 +110,7 @@ schema.methods.getAll = function(){
 
 };
 
-schema.methods.getById = function(id){
+schema.statics.getById = function(id){
 
   const model = this.model(modelName);
 

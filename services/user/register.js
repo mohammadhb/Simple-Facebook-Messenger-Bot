@@ -3,17 +3,17 @@ const {
   messenger: { sendMessageWithSeenAndTyping },
 } = require("../../requests");
 
-async function register(user, message, quick_response, routes) {
+async function register(user, message, quick_response, routes,returnToManager) {
   try {
     await new User(user).updateState(routes.next);
     await sendMessageWithSeenAndTyping(user.sender_id, "Hi, this is your first time with me!");
     await sendMessageWithSeenAndTyping(user.sender_id, "What's your name?");
   } catch (error) {
-    console.error(error.response.data);
+    console.error(error);
   }
 }
 
-async function getFirstName(user, message, quick_response, routes) {
+async function getFirstName(user, message, quick_response, routes,returnToManager) {
   try {
     if (message) {
       await new User(user).updateState(routes.next);
@@ -22,16 +22,15 @@ async function getFirstName(user, message, quick_response, routes) {
     } else {
       //On error
       await sendMessageWithSeenAndTyping(user.sender_id, "That's not correct!");
-      await new User(user).updateStatus(routes.previous);
     }
   } catch (error) {
     console.error(error.response);
   }
 }
 
-async function getBirthday(user, message, quick_response, routes) {
+async function getBirthday(user, message, quick_response, routes,returnToManager) {
   try {
-    if (message) {
+    if (message&&/([0-9]){4}(-)([0-9]){2}(-)([0-9]){2}/.test(message)) {
       await new User(user).updateState(routes.next);
       await new User(user).updateBirthdate(message);
       await sendMessageWithSeenAndTyping(
@@ -49,7 +48,7 @@ async function getBirthday(user, message, quick_response, routes) {
         ]
       );
     } else {
-      //On error
+      await sendMessageWithSeenAndTyping(user.sender_id, "That's not correct! Please Send me birthday in \"yyyy-mm-dd\" format");
     }
   } catch (error) {
     console.error(error);
@@ -62,7 +61,7 @@ function calculateDayDifferenceFrom(date) {
   return result;
 }
 
-async function getAnswerForDaysTillBirthday(user, message, quick_response, routes) {
+async function getAnswerForDaysTillBirthday(user, message, quick_response, routes,returnToManager) {
   const possibleReplies = [
     {
       key: "yeah",
@@ -100,6 +99,11 @@ async function getAnswerForDaysTillBirthday(user, message, quick_response, route
           await sendMessageWithSeenAndTyping(user.sender_id, "👋 Goodbye");
         }
         await new User(user).updateState(routes.next);
+
+        await sendMessageWithSeenAndTyping(user.sender_id, "Ok, You are now registred in our system.");
+        user.state = routes.next;
+        returnToManager(user,message);
+
       } else {
         await sendMessageWithSeenAndTyping(
           user.sender_id,

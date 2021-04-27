@@ -7,6 +7,7 @@ const database = require("./databases");
 
 try{
 
+  database.temporary.start();
   database.persistant.start();
   router.start(3000);
 

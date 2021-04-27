@@ -4,7 +4,7 @@ const {
   weather: { searchCities, getWeatherByCityId },
 } = require("../../requests");
 
-async function askCity(user, message, quick_response, routes) {
+async function askCity(user, message, quick_response, routes, returnToManager) {
   try {
     await sendMessageWithSeenAndTyping(user.sender_id, "Where do you live?");
     await new User(user).updateState(routes.next);
@@ -13,7 +13,7 @@ async function askCity(user, message, quick_response, routes) {
   }
 }
 
-async function queryCities(user, message, quick_response, routes) {
+async function queryCities(user, message, quick_response, routes, returnToManager) {
   try {
     if (message) {
       await sendMessageWithSeenAndTyping(user.sender_id, `Let me search about your city "${message}" ...`);
@@ -31,7 +31,10 @@ async function queryCities(user, message, quick_response, routes) {
         );
         await new User(user).updateState(routes.next);
       } else {
-        await sendMessageWithSeenAndTyping(user.sender_id, `There was no such city as "${message}". Please Try Again ...`);
+        await sendMessageWithSeenAndTyping(
+          user.sender_id,
+          `There was no such city as "${message}". Please Try Again ...`
+        );
       }
     } else {
       //On error
@@ -43,7 +46,7 @@ async function queryCities(user, message, quick_response, routes) {
   }
 }
 
-async function getWeather(user, message, quick_response, routes) {
+async function getWeather(user, message, quick_response, routes, returnToManager) {
   if (message) {
     await sendMessageWithSeenAndTyping(user.sender_id, `Retriving "${message}" Weather ... Hang Tight ...`);
     const weather = (await getWeatherByCityId(quick_response)).data.current;
@@ -53,6 +56,10 @@ async function getWeather(user, message, quick_response, routes) {
       `Looks like its ${weather.condition.text} with ${weather.temp_c}°C and ${weather.humidity}% Humidity`
     );
     await new User(user).updateState(routes.next);
+    
+    user.state = routes.next;
+    returnToManager(user,message);
+
   } else {
     //On error
     await sendMessageWithSeenAndTyping(user.sender_id, "That's not correct!");
