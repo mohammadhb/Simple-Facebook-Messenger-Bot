@@ -8,63 +8,63 @@ const collection = "users";
 const schema = new Schema({
   sender_id: {
     type: String,
-    default: null,
+    default: null
   },
   firstname: {
     type: String,
-    default: null,
+    default: null
   },
   birthdate: {
     type: Date,
-    default: null,
+    default: null
   },
   state: {
     type: String,
-    default: null,
+    default: null
   },
 
   _data_lifecycle: {
     create: {
       date: {
         type: Date,
-        default: new Date(),
-      },
+        default: new Date()
+      }
     },
     update: {
       date: {
         type: Date,
-        default: new Date(),
-      },
+        default: new Date()
+      }
     },
     delete: {
       value: {
         type: Boolean,
-        default: false,
+        default: false
       },
       date: {
         type: Date,
-        default: null,
-      },
+        default: null
+      }
     },
     enable: {
       value: {
         type: Boolean,
-        default: true,
-      },
-    },
-  },
+        default: true
+      }
+    }
+  }
 });
 
 schema.statics.getBySenderId = function (id) {
   return this.model(modelName).findOne({
-    sender_id: id,
+    sender_id: id
   });
 };
 
 schema.statics.updateById = function (id, update) {
   return this.model(modelName).updateOne(
     {
-      _id: id,
+      _id: id
     },
     update
   );
@@ -76,9 +76,9 @@ schema.methods.matchUserBySearch = function (query) {
   return this.model(modelName).find({
     $or: [
       {
-        firstname: regex,
-      },
-    ],
+        firstname: regex
+      }
+    ]
   });
 };
 
@@ -86,5 +86,5 @@ const model = mongoose.model(modelName, schema, collection);
 
 module.exports = {
   model,
-  schema,
+  schema
 };

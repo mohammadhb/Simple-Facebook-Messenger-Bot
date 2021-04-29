@@ -1,4 +1,4 @@
 module.exports = {
   messenger: require("./messenger"),
-  weather: require("./weather"),
+  weather: require("./weather")
 };

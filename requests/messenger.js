@@ -1,8 +1,8 @@
 const axios = require("axios");
 const {
   request: {
-    messenger: { config, access_token },
-  },
+    messenger: { config, access_token }
+  }
 } = require("../config");
 
 const client = axios.create(config);
@@ -11,10 +11,10 @@ function markSeen(recipient) {
   const path = "/me/messages",
     data = {
       recipient: { id: recipient },
-      sender_action: "mark_seen",
+      sender_action: "mark_seen"
     },
     options = {
-      params: { access_token },
+      params: { access_token }
     };
 
   return client.post(path, data, options);
@@ -24,10 +24,10 @@ function setTyping(recipient, state) {
   const path = "/me/messages",
     data = {
       recipient: { id: recipient },
-      sender_action: state ? "typing_on" : "typing_off",
+      sender_action: state ? "typing_on" : "typing_off"
     },
     options = {
-      params: { access_token },
+      params: { access_token }
     };
 
   return client.post(path, data, options);
@@ -40,18 +40,18 @@ function sendMessage(recipient, message, quickReplies) {
       message: {
         text: message,
         quick_replies: quickReplies
-          ? quickReplies.map((quickReply) => {
+          ? quickReplies.map(quickReply => {
             return {
               content_type: "text",
               title: quickReply.key,
-              payload: quickReply.value,
+              payload: quickReply.value
             };
           })
-          : undefined,
-      },
+          : undefined
+      }
     },
     options = {
-      params: { access_token },
+      params: { access_token }
     };
 
   return client.post(path, data, options);
@@ -68,5 +68,5 @@ module.exports = {
   markSeen,
   setTyping,
   sendMessage,
-  sendMessageWithSeenAndTyping,
+  sendMessageWithSeenAndTyping
 };

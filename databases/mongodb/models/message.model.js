@@ -8,54 +8,54 @@ const collection = "messages";
 const schema = new Schema({
   message: {
     type: String,
-    default: null,
+    default: null
   },
   messageId: {
     type: String,
-    default: null,
+    default: null
   },
   recipientId: {
     type: String,
-    default: null,
+    default: null
   },
   senderId: {
     type: String,
-    default: null,
+    default: null
   },
   timestamp: {
     type: Date,
-    default: null,
+    default: null
   },
   _data_lifecycle: {
     create: {
       date: {
         type: Date,
-        default: new Date(),
-      },
+        default: new Date()
+      }
     },
     update: {
       date: {
         type: Date,
-        default: new Date(),
-      },
+        default: new Date()
+      }
     },
     delete: {
       value: {
         type: Boolean,
-        default: false,
+        default: false
       },
       date: {
         type: Date,
-        default: null,
-      },
+        default: null
+      }
     },
     enable: {
       value: {
         type: Boolean,
-        default: true,
-      },
-    },
-  },
+        default: true
+      }
+    }
+  }
 });
 
 schema.statics.getAllPaginated = function (page = 1, pageLimit = 10) {
@@ -66,7 +66,7 @@ schema.statics.getAllPaginated = function (page = 1, pageLimit = 10) {
     limit = pageLimit;
 
   const fields = {
-    __v: 0,
+    __v: 0
   };
 
   return model.find(query).skip(skip).limit(limit).select(fields).exec();
@@ -86,30 +86,38 @@ schema.methods.getAll = function () {
 
   const fields = {
     __v: 0,
-    _data_lifecycle: 0,
+    _data_lifecycle: 0
   };
 
-  return model.find(query).populate("User", "-__v -_data_lifecycle").select(fields).exec();
+  return model
+    .find(query)
+    .populate("User", "-__v -_data_lifecycle")
+    .select(fields)
+    .exec();
 };
 
 schema.statics.getById = function (id) {
   const model = this.model(modelName);
 
   let query = {
-    _id: id,
+    _id: id
   };
 
   const fields = {
     __v: 0,
-    _data_lifecycle: 0,
+    _data_lifecycle: 0
   };
 
-  return model.findOne(query).populate("User", "-__v -_data_lifecycle").select(fields).exec();
+  return model
+    .findOne(query)
+    .populate("User", "-__v -_data_lifecycle")
+    .select(fields)
+    .exec();
 };
 
 const model = mongoose.model(modelName, schema, collection);
 
 module.exports = {
   model,
-  schema,
+  schema
 };

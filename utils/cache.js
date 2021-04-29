@@ -1,5 +1,5 @@
 const {
-  temporary: { manager },
+  temporary: { manager }
 } = require("../databases");
 
 function retriveCache(id) {
@@ -31,5 +31,5 @@ module.exports = {
   retriveCache,
   deleteCache,
   getAllCacheKeysByPattern,
-  normalizeCache,
+  normalizeCache
 };

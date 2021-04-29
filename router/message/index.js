@@ -1,5 +1,9 @@
 const router = require("express")();
-const { getAllMessages, getMessage, deleteMessage } = require("../../controller/message");
+const {
+  getAllMessages,
+  getMessage,
+  deleteMessage
+} = require("../../controller/message");
 const { CACHE_KEYS } = require("../../constants");
 const { cacheMany, cacheOne, cachePurge } = require("../../middlewares/cache");
 

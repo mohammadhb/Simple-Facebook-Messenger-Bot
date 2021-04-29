@@ -1,4 +1,4 @@
 module.exports = {
   User: require("./user"),
-  Message: require("./message"),
+  Message: require("./message")
 };

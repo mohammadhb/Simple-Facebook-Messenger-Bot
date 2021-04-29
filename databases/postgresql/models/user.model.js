@@ -8,20 +8,20 @@ module.exports = (sequelize, DataTypes) => {
         autoIncrement: true,
         primaryKey: true,
         allowNull: false,
-        unique: true,
+        unique: true
       },
       sender_id: {
-        type: DataTypes.STRING,
+        type: DataTypes.STRING
       },
       firstname: {
-        type: DataTypes.STRING,
+        type: DataTypes.STRING
       },
       birthdate: {
-        type: DataTypes.DATE,
+        type: DataTypes.DATE
       },
       state: {
-        type: DataTypes.STRING,
-      },
+        type: DataTypes.STRING
+      }
     },
     {
       // Other model options go here
