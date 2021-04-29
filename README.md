@@ -276,12 +276,14 @@ Configuration Key / Category | Title | Description
 `REDIS_TEST_DATABASE_PASS` | Database Password | Database Password
 
 3. Router Configurations
+
 Configuration Key / Category | Title | Description
 ----------------- | ----- | -----------
 **Weather** | - | -
 `ROUTER_PORT` | Listen Port | Port that router will listen on
 
 4. Service Configurations
+
 Configuration Key / Category | Title | Description
 ----------------- | ----- | -----------
 **Weather** | - | -
