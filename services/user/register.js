@@ -1,14 +1,27 @@
 const { User } = require("../../repository");
 const {
-  messenger: { sendMessageWithSeenAndTyping },
+  messenger: { sendMessageWithSeenAndTyping }
 } = require("../../requests");
 
+const {
+  calculator: { calculateDayDifferenceFromNow }
+} = require("../../utils/index");
+
 // Because i wanted to respect the same pattern on Calling Services
-// eslint-disable-next-line no-unused-vars
-async function register(user, message, quick_response, routes, returnToManager) {
+async function register(
+  user,
+  message,
+  quick_response,
+  routes,// eslint-disable-next-line no-unused-vars
+  returnToManager
+) {
+  const userRepository = new User(user);
   try {
-    await new User(user).updateState(routes.next);
-    await sendMessageWithSeenAndTyping(user.sender_id, "Hi, this is your first time with me!");
+    await userRepository.updateState(routes.next);
+    await sendMessageWithSeenAndTyping(
+      user.sender_id,
+      "Hi, this is your first time with me!"
+    );
     await sendMessageWithSeenAndTyping(user.sender_id, "What's your name?");
   } catch (error) {
     console.error(error);
@@ -16,13 +29,22 @@ async function register(user, message, quick_response, routes, returnToManager) 
 }
 
 // Because i wanted to respect the same pattern on Calling Services
-// eslint-disable-next-line no-unused-vars
-async function getFirstName(user, message, quick_response, routes, returnToManager) {
+async function getFirstName(
+  user,
+  message,
+  quick_response,
+  routes,// eslint-disable-next-line no-unused-vars
+  returnToManager
+) {
+  const userRepository = new User(user);
   try {
     if (message) {
-      await new User(user).updateState(routes.next);
-      await new User(user).updateFirstname(message);
-      await sendMessageWithSeenAndTyping(user.sender_id, `${message}, What's your birthday date?`);
+      await userRepository.updateState(routes.next);
+      await userRepository.updateFirstname(message);
+      await sendMessageWithSeenAndTyping(
+        user.sender_id,
+        `${message}, What's your birthday date?`
+      );
     } else {
       //On error
       await sendMessageWithSeenAndTyping(user.sender_id, "That's not correct!");
@@ -32,25 +54,32 @@ async function getFirstName(user, message, quick_response, routes, returnToManag
   }
 }
 
+
 // Because i wanted to respect the same pattern on Calling Services
-// eslint-disable-next-line no-unused-vars
-async function getBirthday(user, message, quick_response, routes, returnToManager) {
+async function getBirthday(
+  user,
+  message,
+  quick_response,
+  routes,// eslint-disable-next-line no-unused-vars
+  returnToManager
+) {
+  const userRepository = new User(user);
   try {
     if (message && /([0-9]){4}(-)([0-9]){2}(-)([0-9]){2}/.test(message)) {
-      await new User(user).updateState(routes.next);
-      await new User(user).updateBirthdate(message);
+      await userRepository.updateState(routes.next);
+      await userRepository.updateBirthdate(message);
       await sendMessageWithSeenAndTyping(
         user.sender_id,
         `${user.firstname}, Do you want to know how many days are till your birthday ?`,
         [
           {
             key: "Nope",
-            value: 0,
+            value: 0
           },
           {
             key: "Yeah",
-            value: 1,
-          },
+            value: 1
+          }
         ]
       );
     } else {
@@ -64,57 +93,65 @@ async function getBirthday(user, message, quick_response, routes, returnToManage
   }
 }
 
-function calculateDayDifferenceFrom(date) {
-  const result = Math.ceil((new Date(date) - new Date()) / 1000 / 3600 / 24) % 365;
-  if (result < 0) return result + 365;
-  return result;
-}
-
-async function getAnswerForDaysTillBirthday(user, message, quick_response, routes, returnToManager) {
+async function getAnswerForDaysTillBirthday(
+  user,
+  message,
+  quick_response,
+  routes,
+  returnToManager
+) {
+  const userRepository = new User(user);
   const possibleReplies = [
     {
       key: "yeah",
-      value: true,
+      value: true
     },
     {
       key: "yes",
-      value: true,
+      value: true
     },
     {
       key: "yup",
-      value: true,
+      value: true
     },
     {
       key: "no",
-      value: false,
+      value: false
     },
     {
       key: "nope",
-      value: false,
+      value: false
     },
     {
       key: "nah",
-      value: false,
-    },
+      value: false
+    }
   ];
 
   try {
     if (message) {
-      const reply = possibleReplies.find((reply) => reply.key == message.toLowerCase());
+      const reply = possibleReplies.find(
+        reply => reply.key == message.toLowerCase()
+      );
       if (reply) {
         if (reply.value) {
           await sendMessageWithSeenAndTyping(
             user.sender_id,
-            `There are ${calculateDayDifferenceFrom(user.birthdate)} days left until your next birthday.`
+            `There are ${calculateDayDifferenceFromNow(
+              user.birthdate
+            )} days left until your next birthday.`
           );
         } else {
           await sendMessageWithSeenAndTyping(user.sender_id, "👋 Goodbye");
         }
-        await new User(user).updateState(routes.next);
+        await userRepository.updateState(routes.next);
 
-        await sendMessageWithSeenAndTyping(user.sender_id, "Ok, You are now registred in our system.");
+        await sendMessageWithSeenAndTyping(
+          user.sender_id,
+          "Ok, You are now registred in our system."
+        );
         user.state = routes.next;
-        returnToManager(user, message);
+        await returnToManager(user, message);
       } else {
         await sendMessageWithSeenAndTyping(
           user.sender_id,
@@ -122,12 +159,12 @@ async function getAnswerForDaysTillBirthday(user, message, quick_response, route
           [
             {
               key: "Nope",
-              value: 0,
+              value: 0
             },
             {
               key: "Yeah",
-              value: 1,
-            },
+              value: 1
+            }
           ]
         );
       }
@@ -145,39 +182,39 @@ module.exports = [
     route: "/user/register",
     routes: {
       next: "/user/register/getFirstName",
-      previous: "/user/register",
+      previous: "/user/register"
     },
     service: register,
-    hidden: true,
+    hidden: true
   },
   {
     title: "Get First Name",
     route: "/user/register/getFirstName",
     routes: {
       next: "/user/register/getBirthday",
-      previous: "",
+      previous: ""
     },
     service: getFirstName,
-    hidden: true,
+    hidden: true
   },
   {
     title: "Get Birthday",
     route: "/user/register/getBirthday",
     routes: {
       next: "/user/register/getAnswerForDaysTillBirthday",
-      previous: "user/register/getFirstName",
+      previous: "user/register/getFirstName"
     },
     service: getBirthday,
-    hidden: true,
+    hidden: true
   },
   {
     title: "Get Answer for Days till Birthday",
     route: "/user/register/getAnswerForDaysTillBirthday",
     routes: {
       next: "",
-      previous: "user/register/getBirthday",
+      previous: "user/register/getBirthday"
     },
     service: getAnswerForDaysTillBirthday,
-    hidden: true,
-  },
+    hidden: true
+  }
 ];

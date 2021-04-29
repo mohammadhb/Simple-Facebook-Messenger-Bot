@@ -5,7 +5,7 @@ const options = {
   useCreateIndex: true,
   useNewUrlParser: true,
   useFindAndModify: true,
-  useUnifiedTopology: true,
+  useUnifiedTopology: true
 };
 
 const mongodbConfig =
@@ -17,7 +17,7 @@ const mongodbConfig =
       username: process.env.MONGODB_TEST_DATABASE_USER,
       password: process.env.MONGODB_TEST_DATABASE_PASS,
       dialect: "mongodb",
-      options,
+      options
     }
     : {
       database: process.env.MONGODB_DATABASE_NAME,
@@ -26,7 +26,7 @@ const mongodbConfig =
       username: process.env.MONGODB_DATABASE_USER,
       password: process.env.MONGODB_DATABASE_PASS,
       dialect: "mongodb",
-      options,
+      options
     };
 
 const postgresqlConfig =
@@ -38,7 +38,7 @@ const postgresqlConfig =
       username: process.env.POSTGRESQL_TEST_DATABASE_USER,
       password: process.env.POSTGRESQL_TEST_DATABASE_PASS,
       dialect: "postgres",
-      options: {},
+      options: {}
     }
     : {
       database: process.env.POSTGRESQL_DATABASE_NAME,
@@ -47,31 +47,32 @@ const postgresqlConfig =
       username: process.env.POSTGRESQL_DATABASE_USER,
       password: process.env.POSTGRESQL_DATABASE_PASS,
       dialect: "postgres",
-      options: {},
+      options: {}
     };
 
-const redisConfig = 
+const redisConfig =
   node_env === "test"
-    ?{
+    ? {
       database: "cacher",
       host: process.env.REDIS_TEST_DATABASE_HOST,
       username: process.env.REDIS_TEST_DATABASE_USER,
       password: process.env.REDIS_TEST_DATABASE_PASS,
       dialect: "redis",
-      options: {},
-    }:{
+      options: {}
+    }
+    : {
       database: "cacher",
       host: process.env.REDIS_DATABASE_HOST,
       username: process.env.REDIS_DATABASE_USER,
       password: process.env.REDIS_DATABASE_PASS,
       dialect: "redis",
-      options: {},
+      options: {}
     };
 
 module.exports = {
   database,
   config: {
     temporary: redisConfig,
-    persistant: database === "POSTGRESQL" ? postgresqlConfig : mongodbConfig,
-  },
+    persistant: database === "POSTGRESQL" ? postgresqlConfig : mongodbConfig
+  }
 };

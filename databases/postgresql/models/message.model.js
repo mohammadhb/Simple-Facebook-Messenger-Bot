@@ -8,27 +8,27 @@ module.exports = (sequelize, DataTypes) => {
         autoIncrement: true,
         primaryKey: true,
         allowNull: false,
-        unique: true,
+        unique: true
       },
       messageId: {
-        type: DataTypes.STRING,
+        type: DataTypes.STRING
       },
       message: {
-        type: DataTypes.TEXT,
+        type: DataTypes.TEXT
       },
       recipientId: {
-        type: DataTypes.BIGINT,
+        type: DataTypes.STRING
       },
       senderId: {
-        type: DataTypes.BIGINT,
+        type: DataTypes.STRING
       },
       timestamp: {
-        type: DataTypes.DATE,
-      },
+        type: DataTypes.DATE
+      }
     },
     {
       // Other model options go here
-      instanceMethods: {},
+      instanceMethods: {}
     }
   );
 

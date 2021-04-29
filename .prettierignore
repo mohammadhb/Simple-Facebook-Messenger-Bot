@@ -1,0 +1,10 @@
+# Ignore artifacts:
+node_modules
+coverage
+README.md
+.prettierrc
+.eslintrc.json
+docker-compose.yml
+swagger.json
+swagger.config.js
+jest.config.js

@@ -1,5 +1,5 @@
 const {
-  cache: { retriveCache, normalizeCache },
+  cache: { retriveCache, normalizeCache }
 } = require("../utils");
 
 function cacheMany(id) {
@@ -26,7 +26,7 @@ function cacheOne(id) {
 }
 
 function cachePurge(id) {
-  return async function cacheOneMiddleware(request, response, next) {
+  return async function cachePurgeMiddleware(request, response, next) {
     request.cacheId = `${id}/${request.params.id}`;
     request.cacheKey = id;
 
@@ -37,5 +37,5 @@ function cachePurge(id) {
 module.exports = {
   cacheMany,
   cacheOne,
-  cachePurge,
+  cachePurge
 };

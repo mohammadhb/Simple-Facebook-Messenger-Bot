@@ -1,7 +1,7 @@
 const router = require("express")();
 const { event, verification } = require("../../controller/conversation");
 
-router.post("/", (request, response) => event(request, response));
-router.get("/", (request, response) => verification(request, response));
+router.post("/", event);
+router.get("/", verification);
 
 module.exports = router;

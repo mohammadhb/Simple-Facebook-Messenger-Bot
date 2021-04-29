@@ -5,15 +5,22 @@ require("dotenv").config();
 const router = require("./router");
 const database = require("./databases");
 
-try{
+const {
+  common: { router_port }
+} = require("./config");
 
-  database.temporary.start();
-  database.persistant.start();
-  router.start(3000);
+async function start(){
 
-}catch(error){
+  try {
+    await database.temporary.start();
+    await database.persistant.start();
+    router.start(router_port);
+  } catch (error) {
+    //Error on Listening
+    process.exit(0);
+  }
 
-  //Error on Listening
-  process.exit(0);
-    
 }
+
+start();
+

@@ -8,35 +8,43 @@ let sequelize;
 const baseName = path.basename(__filename);
 const modelsPath = path.join(__dirname, "models");
 
-function connectDatabase({ database, username, host, port, password, dialect, options }, onError, onOpen) {
+async function connectDatabase(
+  { database, username, host, port, password, dialect, options },
+  onError,
+  onOpen
+) {
   sequelize = new Sequelize(database, username, password, {
     host,
     port,
     dialect,
-    logging: console.log,
-    ...options,
+    logging: false,
+    ...options
   });
-  sequelize.authenticate().then(
-    (resolve) => {
-      onOpen(resolve);
-    },
-    (reject) => {
-      onError(reject);
-    }
-  );
+
+  try {
+    await sequelize.authenticate();
+    await onOpen();
+  } catch (error) {
+    onError(error);
+  }
 }
 
 function connectModels(sequelize) {
   fs.readdirSync(modelsPath)
-    .filter((file) => {
-      return file.indexOf(".") !== 0 && file !== baseName && file.slice(-3) === ".js";
+    .filter(file => {
+      return (
+        file.indexOf(".") !== 0 && file !== baseName && file.slice(-3) === ".js"
+      );
     })
-    .forEach((file) => {
-      const model = require(path.join(modelsPath, file))(sequelize, Sequelize.DataTypes);
+    .forEach(file => {
+      const model = require(path.join(modelsPath, file))(
+        sequelize,
+        Sequelize.DataTypes
+      );
       models[model.name] = model;
     });
 
-  Object.keys(models).forEach((modelName) => {
+  Object.keys(models).forEach(modelName => {
     if (models[modelName].associate) {
       models[modelName].associate(models);
     }
@@ -51,5 +59,5 @@ module.exports = {
   connectDatabase,
   connectModels,
   getClient,
-  models,
+  models
 };

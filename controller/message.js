@@ -1,7 +1,11 @@
 const { Message } = require("../repository");
 const {
-  cache: { updateCache, deleteCache, getAllCacheKeysByPattern },
+  cache: { updateCache, deleteCache, getAllCacheKeysByPattern }
 } = require("../utils");
+
+const {
+  HTTP_CODES
+} = require("../constants");
 
 /**
  * @swagger
@@ -13,6 +17,17 @@ const {
  *     description: Gets all the messages that sent along the bot
  *     produces:
  *       - application/json
+ *     parameters:
+ *       - in: query
+ *         name: page
+ *         schema:
+ *           type: integer
+ *         description: The number of items to skip before starting to collect the result set
+ *       - in: query
+ *         name: limit
+ *         schema:
+ *           type: integer
+ *         description: The numbers of items to return
  *     responses:
  *       200:
  *         description: Got all the messages successfully
@@ -50,8 +65,56 @@ const {
  *                         type: string
  *                         description: Message local ID
  *                         example: 6075751f50fb431d35fdb599
+ *                 meta:
+ *                   type: object
+ *                   properties:
+ *                     count:
+ *                       type: integer
+ *                       description: All entities count
+ *                       example: 100
+ *                     pages:
+ *                       type: integer
+ *                       description: All pages based on given limit
+ *                       example: 10
+ *                     page:
+ *                       type: integer
+ *                       description: Current page index given
+ *                       example: 1
+ *                     limit:
+ *                       type: integer
+ *                       description: Current limit given
+ *                       example: 10
  *                 errors:
  *                   type: array
+ *       404:
+ *         description: No message have been found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 data:
+ *                   type: array
+ *                 meta:
+ *                   type: object
+ *                   properties:
+ *                     count:
+ *                       type: integer
+ *                       description: All entities count
+ *                       example: 0
+ *                     pages:
+ *                       type: integer
+ *                       description: All pages based on given limit
+ *                       example: 1
+ *                     page:
+ *                       type: integer
+ *                       description: Current page index given
+ *                       example: 1
+ *                     limit:
+ *                       type: integer
+ *                       description: Current limit given
+ *                       example: 10
+ *                 errors:
  *                   items:
  *                     type: object
  *                     properties:
@@ -71,7 +134,7 @@ async function getAllMessages(request, response) {
   page = parseInt(page);
   limit = parseInt(limit);
 
-  const messages = await new Message().getAllPaginated(),
+  const messages = await new Message().getAllPaginated(page, limit),
     countAllMessages = await new Message().countAll();
 
   const data = {
@@ -80,19 +143,32 @@ async function getAllMessages(request, response) {
       count: countAllMessages,
       pages: Math.ceil(countAllMessages / limit),
       page,
-      limit,
-    },
+      limit
+    }
   };
 
-  response.status(200).json({
-    ...data,
-    errors: [],
-  });
+  if (messages) {
+    try {
+      await updateCache(request.cacheId, data);
+    } catch (error) {
+      console.error(error);
+    }
 
-  try {
-    await updateCache(request.cacheId, data);
-  } catch (error) {
-    console.error(error);
+    response.status(HTTP_CODES.HTTP_OK).json({
+      ...data,
+      errors: []
+    });
+  } else {
+    response.status(HTTP_CODES.HTTP_NOT_FOUND).json({
+      ...data,
+      errors: [
+        {
+          message: "Not Found",
+          description:
+            "No item has found because no message has been sent along"
+        }
+      ]
+    });
   }
 }
 
@@ -145,6 +221,17 @@ async function getAllMessages(request, response) {
  *                       example: 6075751f50fb431d35fdb599
  *                 errors:
  *                   type: array
+ *       404:
+ *         description: No such massage found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 data:
+ *                   type: object
+ *                   example: null
+ *                 errors:
  *                   items:
  *                     type: object
  *                     properties:
@@ -155,7 +242,7 @@ async function getAllMessages(request, response) {
  *                       description:
  *                         type: string
  *                         description: Error description.
- *                         example: No item has found because no message has been sent along
+ *                         example: No such message exists
  */
 
 //Gets specific Message
@@ -164,18 +251,30 @@ async function getMessage(request, response) {
   const message = await new Message().getById(id);
 
   const data = {
-    data: message,
+    data: message
   };
 
-  response.status(200).json({
-    ...data,
-    errors: [],
-  });
+  if (message) {
+    try {
+      await updateCache(request.cacheId, data);
+    } catch (error) {
+      console.error(error);
+    }
 
-  try {
-    await updateCache(request.cacheId, data);
-  } catch (error) {
-    console.error(error);
+    response.status(HTTP_CODES.HTTP_OK).json({
+      ...data,
+      errors: []
+    });
+  } else {
+    response.status(HTTP_CODES.HTTP_NOT_FOUND).json({
+      ...data,
+      errors: [
+        {
+          message: "Not Found",
+          description: "No such message exists"
+        }
+      ]
+    });
   }
 }
 
@@ -201,33 +300,20 @@ async function getMessage(request, response) {
  *               properties:
  *                 data:
  *                   type: object
- *                   properties:
- *                     message:
- *                       type: string
- *                       description: The message
- *                       example: Example Message
- *                     messageId:
- *                       type: string
- *                       description: Facebook Messenger message ID
- *                       example: m_EKooS0f-M6Efn9OIvhHXyWuR0_qR6ObtxMuiXWeWdkjS29AjPjU9Mos4UCmYyqF5IWpuVFPnB4GvTHB-shFO3A
- *                     recipientId:
- *                       type: string
- *                       description: Message recipient ID
- *                       example: 100492362178594
- *                     senderId:
- *                       type: string
- *                       description: Message sender ID
- *                       example: 3805403212840161
- *                     timestamp:
- *                       type: date
- *                       description: Message sent date
- *                       example: 2021-04-13T10:40:31.150Z
- *                     _id:
- *                       type: string
- *                       description: Message local ID
- *                       example: 6075751f50fb431d35fdb599
+ *                   example: null
  *                 errors:
  *                   type: array
+ *       404:
+ *         description: No such massage found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 data:
+ *                   type: object
+ *                   example: null
+ *                 errors:
  *                   items:
  *                     type: object
  *                     properties:
@@ -238,31 +324,47 @@ async function getMessage(request, response) {
  *                       description:
  *                         type: string
  *                         description: Error description.
- *                         example: No item has found because no message has been sent along
+ *                         example: No such message exists
  */
 //Deletes specific Message
 async function deleteMessage(request, response) {
   const id = request.params.id;
-  const message = await new Message().deleteById(id);
-  response.status(200).json({
-    data: message,
-    errors: [],
-  });
+  const messageRepository = await new Message();
+  const message = await messageRepository.deleteById(id);
 
-  try {
-    await deleteCache(request.cacheId);
-    const cacheKeys = await getAllCacheKeysByPattern(`${request.cacheKey}/*/*`);
-    for (const cacheKey of cacheKeys) {
-      await deleteCache(cacheKey);
+  if ((messageRepository.isMongoDB && message.deletedCount) || message == 1) {
+    try {
+      await deleteCache(request.cacheId);
+      const cacheKeys = await getAllCacheKeysByPattern(
+        `${request.cacheKey}/*/*`
+      );
+      for (const cacheKey of cacheKeys) {
+        await deleteCache(cacheKey);
+      }
+    } catch (error) {
+      // Error tracing (e.g. Sentry)
+      console.error(error);
     }
-  } catch (error) {
-    // Error tracing (e.g. Sentry)
-    console.error(error);
+
+    response.status(HTTP_CODES.HTTP_OK).json({
+      data: null,
+      errors: []
+    });
+  } else {
+    response.status(HTTP_CODES.HTTP_NOT_FOUND).json({
+      data: null,
+      errors: [
+        {
+          message: "Not Found",
+          description: "No such message exists"
+        }
+      ]
+    });
   }
 }
 
 module.exports = {
   getAllMessages,
   getMessage,
-  deleteMessage,
+  deleteMessage
 };

@@ -1,8 +1,12 @@
 const { Message, User } = require("../repository");
 const mainService = require("../services");
 const {
-  bot: { verification_token },
+  bot: { verification_token }
 } = require("../config");
+
+const {
+  HTTP_CODES
+} = require("../constants");
 
 /*
     A Preset Webhook for Bot to be fetch messages
@@ -13,21 +17,20 @@ async function event(request, response) {
   if (body.object === "page") {
     for (let entry of body.entry) {
       const event = entry.messaging[0];
-      response.status(200).send("EVENT_RECEIVED");
 
       //Save any incoming messages
-      new Message({
+      await new Message({
         recipientId: event.recipient.id,
         senderId: event.sender.id,
         messageId: event.message.mid,
         message: event.message.text,
-        timestamp: event.timestamp,
+        timestamp: event.timestamp
       }).create();
 
       let user = await new User().getBySenderId(event.sender.id);
       if (!user) {
         user = await new User({
-          sender_id: event.sender.id,
+          sender_id: event.sender.id
         }).create();
       }
 
@@ -37,9 +40,11 @@ async function event(request, response) {
         event.message.text,
         event.message.quick_reply ? event.message.quick_reply.payload : null
       );
+
+      return response.status(HTTP_CODES.HTTP_OK).send("EVENT_RECEIVED");
     }
   } else {
-    response.sendStatus(404);
+    return response.sendStatus(HTTP_CODES.HTTP_NOT_FOUND);
   }
 }
 
@@ -53,14 +58,14 @@ function verification(request, response) {
 
   if (mode && token) {
     if (mode === "subscribe" && token === verification_token) {
-      response.status(200).send(challenge);
+      response.status(HTTP_CODES.HTTP_OK).send(challenge);
     } else {
-      response.sendStatus(403);
+      response.sendStatus(HTTP_CODES.HTTP_FORBIDDEN);
     }
   }
 }
 
 module.exports = {
   event,
-  verification,
+  verification
 };

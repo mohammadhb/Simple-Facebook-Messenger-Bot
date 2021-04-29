@@ -14,18 +14,21 @@ class IRepository {
     return new this.model(this.data).save();
   }
 
-  getAllPaginated() {
-    if (this.isMongoDB) return this.model.getAllPaginated();
-    return this.model.findAll();
+  getAllPaginated(page, limit) {
+    if (this.isMongoDB) return this.model.getAllPaginated(page, limit);
+    return this.model.findAll({
+      offset: (page - 1) * limit,
+      limit
+    });
   }
 
   countAll() {
     if (this.isMongoDB) return this.model.countAll();
-    return this.model.findAll();
+    return this.model.count();
   }
 
   getAll() {
-    if (this.isMongoDB) return this.model.find();
+    if (this.isMongoDB) return this.model.findAll();
     return this.model.findAll();
   }
 
@@ -33,27 +36,27 @@ class IRepository {
     if (this.isMongoDB) return this.model.getById(id);
     return this.model.findOne({
       where: {
-        id,
-      },
+        id
+      }
     });
   }
 
   deleteById(id) {
     if (this.isMongoDB) return this.model.deleteOne({ _id: id });
-    return this.model.findOne({
+    return this.model.destroy({
       where: {
-        id,
-      },
+        id
+      }
     });
   }
 
   updateById(id, data) {
     if (this.isMongoDB) return this.model.updateById(id, data);
-    return this.model.findOne(
+    return this.model.update(
       {
         where: {
-          id,
-        },
+          id
+        }
       },
       data
     );

@@ -19,6 +19,11 @@
 
 ### Introduction:
 
+It's a Service-Based Facebook bot that can be developed easily.
+
+You just need to add your own service and it will be discovered ([Build a Service](#building-a-service)).
+
+
 ### Technical Features:
 
 Here are additional **Key Technical Features** implemented into this project.
@@ -65,6 +70,142 @@ To get the project running first start to clone the project and then follow the 
 *Optional Instruction
 
 ### Building a Service:
+
+You can build a service following by these steps:
+> On this example we are just saying a `Hello!` and `Bye!!` to a `Registred` user
+
+1. Create a folder in `services` in the `root` of the project (e.g. `example-service`)
+2. Create your services in each seperate file (e.g. `subservice1.js`,`subservice2.js`) we will call it `subservice.js` for the sake of example and `subservice.js` and import your library and write ur services like below :
+
+Sub-Service function params
+
+```javascript
+function(
+  user,// instance of "User" model in database models
+  message,// message sent by user
+  quick_response,//response of quick reply sent by user (is "null" if doesn't exist)
+  routes,//routes that defined in the sub-service export array
+  returnToManager//returns to Service Manager for further processes
+){
+  //Process the message & quick_response
+  //Update user state to be proceed [Required to be Proceed]
+  //Call the returnToManager to get back to Service Manager Immidiately
+  //etc.
+}
+```
+
+service-subservice.js
+
+```javascript
+const { User } = require("../../repository");
+const {
+  messenger: { sendMessageWithSeenAndTyping },
+  //Add your request to third-party services here like -> example: { exampleRequest }
+} = require("../../requests");
+
+async function sayHello(user, message, quick_response, routes, returnToManager) {
+  const userRepository = new User(user);
+  try {
+    // make your calls to the requests here like -> await exampleRequest();
+    await sendMessageWithSeenAndTyping(user.sender_id, "Hello!");
+    await userRepository.updateState(routes.next); // Update the user state and set it the next route so the user can proceed.
+  } catch (error) {
+    //Error of the messenger and Databases
+  }
+}
+
+async function sayBye(user, message, quick_response, routes, returnToManager) {
+  const userRepository = new User(user);
+  try {
+    // make your calls to the requests here like -> await exampleRequest();
+    await sendMessageWithSeenAndTyping(user.sender_id, "Where do you live?");
+    await userRepository.updateState(routes.next); // Update the user state and set it the next route so the user can proceed.
+  } catch (error) {
+    //Error of the messenger and Databases
+  }
+}
+```
+3. Export your Sub-Services at the end of the file in this format:
+
+```javascript
+module.exports = Array(
+  {
+    title: String,              //Title of your Service
+    route: String,              //Current route of the sub-service ( attention: it should not conflict with other routes of other service and sub-services; For best practice you can follow this pattern for your routes -> /SERVICE_NAME/SUB_SERVICE_FUNCTION_NAME)
+    routes: {
+      previous: String,
+      next: String,
+      //Add other routes if you need one here ( an empty string means that it will get "automatically" processed if he's registred then will get to the main menu otherwise it will go to the Registration process )
+    },
+    service: askCity,
+    hidden: false,              //To be hide or not in the Main Menu
+  },
+  //Add other sub-services if needed here
+);
+```
+4. The final `subservice.js` would be like this:
+
+```javascript
+const { User } = require("../../repository");
+const {
+  messenger: { sendMessageWithSeenAndTyping },
+  //Add your request to third-party services here like -> example: { exampleRequest }
+} = require("../../requests");
+
+async function sayHello(user, message, quick_response, routes, returnToManager) {
+  const userRepository = new User(user);
+  try {
+    // make your calls to the requests here like -> await exampleRequest();
+    await sendMessageWithSeenAndTyping(user.sender_id, "Hello!");
+    await userRepository.updateState(routes.next); // Update the user state and set it the next route so the user can proceed.
+  } catch (error) {
+    //Error of the messenger and Databases
+  }
+}
+
+async function sayBye(user, message, quick_response, routes, returnToManager) {
+  const userRepository = new User(user);
+  try {
+    // make your calls to the requests here like -> await exampleRequest();
+    await sendMessageWithSeenAndTyping(user.sender_id, "Where do you live?");
+    await userRepository.updateState(routes.next); // Update the user state and set it the next route so the user can proceed.
+  } catch (error) {
+    //Error of the messenger and Databases
+  }
+}
+    
+module.exports = [
+  {
+    title: "Say Hello and Bye",
+    route: "/weather/sayHello",
+    routes: {
+      previous: "",
+      next: "/weather/sayBye",
+    },
+    service: sayHello,
+    hidden: false,
+  },
+  {
+    title: "",
+    route: "/weather/sayBye",
+    routes: {
+      previous: "/weather/sayHello",
+      next: "",
+    },
+    service: sayBye,
+    hidden: true,
+  },
+];
+```
+
+4. Then create a `index.js` file in root of your service directory and require and export all of your subservices in an Array:
+```javascript
+module.exports=[
+  require('./subservice'),
+  // require('./subservice1'),
+  // require('./subservice2')
+]
+```
 
 ### Installation:
 

@@ -5,16 +5,20 @@ bluebird.promisifyAll(redis);
 
 let clients = {};
 
-function connectDatabase({ database, username, host, port, password, options }, onError, onOpen) {
+async function connectDatabase(
+  { database, username, host, port, password, options },
+  onError,
+  onOpen
+) {
   if (clients[database]) return;
 
-  clients[database] = redis.createClient({
+  clients[database] = await redis.createClient({
     user: username,
     password: password,
     host: host,
     port: port | 6379,
     db: Object.keys(clients).length,
-    ...options,
+    ...options
   });
 
   clients[database].on("error", onError);
@@ -35,5 +39,5 @@ function getClient(database) {
 module.exports = {
   connectDatabase,
   disconnectDatabase,
-  getClient,
+  getClient
 };

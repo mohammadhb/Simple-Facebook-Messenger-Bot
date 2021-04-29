@@ -3,8 +3,7 @@ const { persistant } = require("../databases");
 
 class Repository extends IRepository {
   constructor(data) {
-    const model = persistant.models.Message;
-    super(data, model);
+    super(data, persistant.models.Message);
   }
 }
 

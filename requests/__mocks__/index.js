@@ -1,6 +1,14 @@
 /* eslint-env jest */
 
-exports.markSeen = jest.fn();
-exports.setTyping = jest.fn();
-exports.sendMessage = jest.fn();
-exports.sendMessageWithSeenAndTyping = jest.fn();
+module.exports = {
+  messenger: {
+    markSeen: jest.fn(),
+    setTyping: jest.fn(),
+    sendMessage: jest.fn(),
+    sendMessageWithSeenAndTyping: jest.fn()
+  },
+  weather: {
+    searchCities: jest.fn().mockReturnValue({ data: [{ name: "Tehran" }] }),
+    getWeatherByCityId: jest.fn()
+  }
+};
