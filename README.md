@@ -94,7 +94,7 @@ function(
 }
 ```
 
-service-subservice.js
+subservice.js
 
 ```javascript
 const { User } = require("../../repository");
