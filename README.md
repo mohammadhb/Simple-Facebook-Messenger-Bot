@@ -232,7 +232,7 @@ Configuration Key | Title | Description
 `MESSENGER_BOT_VERIFICATION_TOKEN` | Verification token | Messenger bot settings on Facebook when Verifying URL callback
 `MESSENGER_BOT_ACCESS_TOKEN` | Access token | Messenger bot settings on Facebook when Generating Access Token
 
-1. Database Configurations
+2. Database Configurations
 
 Configuration Key / Category | Title | Description
 ----------------- | ----- | -----------
@@ -274,6 +274,21 @@ Configuration Key / Category | Title | Description
 `REDIS_TEST_DATABASE_PORT` | Database Port | Database Port
 `REDIS_TEST_DATABASE_USER` | Database Username | Database Username
 `REDIS_TEST_DATABASE_PASS` | Database Password | Database Password
+
+3. Router Configurations
+Configuration Key / Category | Title | Description
+----------------- | ----- | -----------
+**Weather** | - | -
+`ROUTER_PORT` | Listen Port | Port that router will listen on
+
+4. Service Configurations
+Configuration Key / Category | Title | Description
+----------------- | ----- | -----------
+**Weather** | - | -
+`WEATHER_SERVICE_API_KEY` | API Key | API Key of the "Weather" Service
+**Service1** | - | -
+`SERVICE1_SERVICE_API_KEY` | API Key | API Key of the "Service1" Service
+`SERVICE1_SERVICE_EXAMPLE` | Example variable | Example variable of the "Service1" Service
 
 ### Usage
 
