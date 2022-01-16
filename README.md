@@ -1,6 +1,8 @@
-# Messenger
+# Simple and Extensible Facebook Messenger Bot
 
-## A Simple Facebook Bot Messenger
+<img alt="Cover Photo" src="./img.png" width="900" height="400">
+
+## Short Demo
 
 <img alt="Sample demo of The Messenger Bot" src="./example.gif" width="270" height="480">
 
